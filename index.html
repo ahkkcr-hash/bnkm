@@ -570,10 +570,36 @@ function handleSendOTP() {
     return;
   }
   
-  const preCheck = prepareForOTP(email, selectedSeats);
-  if (!preCheck.success) {
-    return preCheck; // Stops here and tells the user the seats are gone
-  }
+  // 1. The Bridge: Call the Kitchen
+  google.script.run
+  .withSuccessHandler(function(preCheck) {
+    // 2. The Kitchen Answers
+    if (!preCheck.success) {
+      errorMsg.style.color = "#e55";
+      errorBlinker(errorMsg, preCheck.message);
+      sendBtn.disabled = false; // Let them try again with different seats
+      return; 
+    }
+
+    // 3. ONLY IF SUCCESS: Proceed with the OTP sequence
+    sendBtn.disabled = true;
+    sendBtn.innerText = "Resend";
+    submitBtn.disabled = false;
+    errorMsg.innerText = "Seats held! Sending code...";
+
+    // Trigger the actual OTP email function in your Code.gs
+    google.script.run.withSuccessHandler(function() {
+      errorMsg.innerText = "OTP sent to your inbox.";
+      startTimer(30); 
+    }).sendOTP(email);
+
+  })
+  .withFailureHandler(function(err) {
+    // If the "Telephone Line" itself breaks
+    errorBlinker(errorMsg, "Kitchen Connection Error. Please try again.");
+    sendBtn.disabled = false;
+  })
+  .prepareForOTP(email, selectedSeats);
   
   // 3a & 3b: Disable button and trigger backend
   sendBtn.disabled = true;
