@@ -600,17 +600,6 @@ function handleSendOTP() {
     sendBtn.disabled = false;
   })
   .prepareForOTP(email, selectedSeats);
-  
-  // 3a & 3b: Disable button and trigger backend
-  sendBtn.disabled = true;
-  sendBtn.innerText = "Resend";
-  submitBtn.disabled = false;
-  errorMsg.innerText = "Sending code...";
-
-  google.script.run.withSuccessHandler(function() {
-    errorMsg.innerText = "OTP sent to your inbox.";
-    startTimer(30); // 3c: Start 30s timer
-  }).sendOTP(email);
 }
 
 function startTimer(seconds) {
