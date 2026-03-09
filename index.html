@@ -551,6 +551,11 @@ function handleSendOTP() {
     errors = errors + 1;
     msg += "Please select at least one seat first!";
   }
+  const preCheck = prepareForOTP(email, seatIds); 
+  
+  if (!preCheck.success) {
+    return preCheck; // Stops here and tells the user the seats are gone
+  }
   if (!email.includes('@')) {
     if (errors > 0) msg += "\n";
     errors = errors + 1;
@@ -566,7 +571,6 @@ function handleSendOTP() {
     errorBlinker(errorMsg, msg);
     return;
   }
-  
   // 3a & 3b: Disable button and trigger backend
   sendBtn.disabled = true;
   sendBtn.innerText = "Resend";
