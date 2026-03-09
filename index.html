@@ -236,7 +236,7 @@ function hideLoader() {
 window.onload = function() {
   console.log("1. Requesting data...");
   
-  google.script.run
+  window.google.script.run
     .withSuccessHandler(function(data) {
        console.log("2. Data arrived! Count:", data.length);
        
