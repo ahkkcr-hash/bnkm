@@ -627,7 +627,7 @@ function handleVerifyOTP() {
   const selectedSeats = getSelectedSeatArray();
   const submitBtn = document.getElementById('submit-btn');
   const errorMsg = document.getElementById('error-msg');
-  errorMsg.innerText = "Verifying OTP...";
+  errorMsg.innerText = "Verifying Booking Code...";
   
   google.script.run.withSuccessHandler(function(isValid) {
     if (isValid) {
@@ -675,7 +675,7 @@ function handleVerifyOTP() {
         }).getUserBookingDetails(email); // The server-side function we planned
       }
     } else {
-      document.getElementById('error-msg').innerText = "Incorrect OTP. Try again.";
+      document.getElementById('error-msg').innerText = "Incorrect Booking Code. Try again.";
     }
   }).verifyOTP(email, otp);
 }
