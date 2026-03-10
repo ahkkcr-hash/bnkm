@@ -587,7 +587,7 @@ function handleSendOTP() {
     sendBtn.disabled = true;
     sendBtn.innerText = "Resend";
     submitBtn.disabled = false;
-    errorMsg.innerText = (mode === 1)?"Seats held! Sending booking code...":"Sending booking code...;
+    errorMsg.innerText = (mode === 1)?"Seats held! ":"" + "Sending booking code...";
 
     // Trigger the actual OTP email function in your Code.gs
     google.script.run.withSuccessHandler(function() {
