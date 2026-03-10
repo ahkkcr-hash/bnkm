@@ -572,6 +572,7 @@ function handleSendOTP() {
   }
   
   // 1. The Bridge: Call the Kitchen
+  errorMsg.innerText = "Checking Seat Availability. Please wait...";
   google.script.run
   .withSuccessHandler(function(preCheck) {
     // 2. The Kitchen Answers
@@ -586,21 +587,20 @@ function handleSendOTP() {
     sendBtn.disabled = true;
     sendBtn.innerText = "Resend";
     submitBtn.disabled = false;
-    errorMsg.innerText = "Seats held! Sending code...";
+    errorMsg.innerText = (mode === 1)?"Seats held! Sending booking code...":"Sending booking code...;
 
     // Trigger the actual OTP email function in your Code.gs
     google.script.run.withSuccessHandler(function() {
-      errorMsg.innerText = "OTP sent to your inbox.";
+      errorMsg.innerText = "Booking code sent to your inbox.";
       startTimer(30); 
     }).sendOTP(email);
-
   })
   .withFailureHandler(function(err) {
     // If the "Telephone Line" itself breaks
     errorBlinker(errorMsg, "Kitchen Connection Error. Please try again.");
     sendBtn.disabled = false;
   })
-  .prepareForOTP(email, selectedSeats);
+  .prepareForOTP(mode, email, selectedSeats);
 }
 
 function startTimer(seconds) {
