@@ -99,8 +99,8 @@
 
       <div id="seats-details-positions" style="display:flex">
        <div id="map-container" style="flex:0.66; min-height: 500px; border: 1px solid red">
-        <div id="loading-overlay" style="position:absolute; top:50%; left:50%; transform:translate(-65%, -70%); background:rgba(255,255,255,0.8); padding:20px; border-radius:10px; z-index:100; text-align:center; font-family:sans-serif;display:flex">
-         <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #198754; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>
+        <div id="loading-overlay">
+         <div class="spinner"></div>
          <span>Syncing Map Status...</span>
         </div>
         <svg id="seatMap" viewBox="0 0 650 800" preserveAspectRatio="xMidYMid meet">
@@ -180,19 +180,19 @@
 <script>
 let allMapData = [];
 let mode=-1;
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycb.../exec";
 
 function RetrieveMode() { mode=0; nextPage(); }
 
 function BookingMode() { mode=1; nextPage(); }
 
 function nextPage()
-{ document.getElementById("welcome").style.display='none';
+{ document.getElementById('loading-overlay').style.display = 'flex';
+  document.getElementById("welcome").style.display='none';
   document.getElementById("bookings").style.display='flex';
   document.getElementById("clear").style.display = (mode===0)?'none':'block';
   document.getElementById("bookings").style.height = (mode===0)?'92vh':'85vh';
   document.getElementById("auth-section").style.display = 'flex';
-console.log("TRIGGERING RENDER NOW!");
+  console.log("TRIGGERING RENDER NOW!");
   renderSeats(allMapData);
   hideLoader();
   updateSelectionLabel();
@@ -971,22 +971,24 @@ body::before {
 }
 
 #loading-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #000; /* Match your theme */
-  display: flex;
+  position: fixed; /* Stays put even if user scrolls */
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Dark dimmed background */
+  display: flex; /* Centers the content */
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 10000; /* Higher than EVERYTHING else */
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid #333;
-  border-top: 5px solid gold; /* Your branding color */
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #198754; /* Green matching your theme */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
