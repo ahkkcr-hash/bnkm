@@ -244,9 +244,9 @@ window.onload = function() {
        mapContainer.style.display = (mode===0)?'none':'block'; 
        
       if (data && data.length > 0) {
-        // renderSeats(data);
+        renderSeats(data);
         allMapData = data;
-        // hideLoader(); 
+        hideLoader(); 
       } else {
         console.error("Critical Error: Spreadsheet returned no seat data.");
         alert("The auditorium map could not be loaded. Please refresh.");
