@@ -243,10 +243,8 @@ window.onload = function() {
        const mapContainer = document.getElementById('map-container');
        mapContainer.style.display = (mode===0)?'none':'block'; 
        
-      if (data && data.length > 0)
-      { renderSeats(data);
+      if (data && data.length > 0) {
         allMapData = data;
-        hideLoader();
       } else {
         console.error("Critical Error: Spreadsheet returned no seat data.");
         alert("The auditorium map could not be loaded. Please refresh.");
