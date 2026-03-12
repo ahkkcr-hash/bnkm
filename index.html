@@ -328,6 +328,7 @@ async function renderSeats(seats, mySeatIds = []) {
   try {
     const seatLayer = document.getElementById('seat-layer');
     const loadingText = document.querySelector('#loading-overlay span');
+    console.log(loadingText.innerText);
     const isRetrievalMode = (mode === 0);
     
     // 1. Initialize the counter
