@@ -321,25 +321,22 @@ function updateSelectionLabel() {
   label.innerHTML += ` (${selectedIds.length} seats)`;
 }
 
-function renderSeats(seats, mySeatIds = []) {
-  // 1. Target the specific "Seat Layer" instead of the whole SVG
-  const seatLayer = document.getElementById('seat-layer');
-  
-  if (!seatLayer) {
-    console.error("Seat Layer not found!");
-    return;
-  }
+async function renderSeats(seats, mySeatIds = []) {
+  if (isRendering) return;
+  isRendering = true;
 
-  // 2. CLEAR ONLY THE SEATS: This leaves the Stage and Entrance alone
-  while (seatLayer.firstChild) {
-    seatLayer.removeChild(seatLayer.firstChild);
-  }
+  try {
+    const seatLayer = document.getElementById('seat-layer');
+    const loadingText = document.querySelector('#loading-overlay span');
+    const isRetrievalMode = (mode === 0);
+    
+    // 1. Initialize the counter
+    let i = 0; 
 
-  if (!seats || !Array.isArray(seats)) return;
+    if (!seatLayer) return;
+    while (seatLayer.firstChild) seatLayer.removeChild(seatLayer.firstChild);
 
-  const isRetrievalMode = (mode === 0);
-
-  seats.forEach(seat => {
+    for (const seat of seats) {
     const seatId = `${seat.RowName}${seat.ColNum}`;
     const status = (seat.Status || "").toLowerCase();
     
@@ -378,7 +375,19 @@ function renderSeats(seats, mySeatIds = []) {
 
     // 3. APPEND TO THE LAYER: Put the seat in the protected room
     seatLayer.appendChild(group);
-  });
+    // 2. Increment AFTER the seat is added
+      i++; 
+
+      // 3. Update the UI every 10 seats
+      if (i % 10 === 0 || i === seats.length) {
+        loadingText.innerText = `Synchronizing: ${i} / ${seats.length} Seats`;
+        await new Promise(resolve => requestAnimationFrame(resolve));
+      }
+    }
+  } finally {
+    isRendering = false;
+    hideLoader();
+  }
 }
 
 // HELPER: To keep the main function clean
