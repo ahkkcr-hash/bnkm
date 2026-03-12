@@ -329,7 +329,6 @@ async function renderSeats(seats, mySeatIds = []) {
   try {
     const seatLayer = document.getElementById('seat-layer');
     const loadingText = document.querySelector('#loading-overlay span');
-    console.log(loadingText.innerText);
     const isRetrievalMode = (mode === 0);
     
     // 1. Initialize the counter
@@ -383,6 +382,7 @@ async function renderSeats(seats, mySeatIds = []) {
       // 3. Update the UI every 10 seats
       if (i % 10 === 0 || i === seats.length) {
         loadingText.innerText = `Synchronizing: ${i} / ${seats.length} Seats`;
+        console.log(loadingText.innerText);
         await new Promise(resolve => requestAnimationFrame(resolve));
       }
     }
