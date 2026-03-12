@@ -168,7 +168,7 @@
    </div>
    <div style="flex:0.05;">
     <button onclick="document.getElementById('contact-us').style.display='none';"">Contact Us</button>
-    <div id='contact-us'>
+    <div id='contact-us' class='full-screen'>
      <p></p>
      <button onclick="document.getElementById('contact-us').style.display='none';">OK</button>
     </div>
@@ -984,7 +984,7 @@ body::before {
   padding: 15px;
 }
 
-#loading-overlay {
+.full-screen {
   position: fixed; /* Fixes it to the screen, not the container */
   top: 0;
   left: 0;
