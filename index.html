@@ -173,8 +173,31 @@
      <button onclick="document.getElementById('contact-us').style.display='none';" class='bnkm-button'>OK</button>
     </div>
     
-    <a href="#" onclick="showModal('refund')">Refund Policy</a> | 
-    <a href="#" onclick="showModal('terms')">Terms & Conditions</a>
+    <button onclick="document.getElementById('contact-us').style.display='flex';" class='bnkm-button'>Contact Us</button>
+    <div id='cancellation-policy' class='full-screen' style='display:none'>
+     <p>Cancellation Charges</p>
+     <table>
+      <tr>
+       <td>Time of Cancellation</td>
+       <td>Cancellation Charges</td>
+      </tr>
+      <tr>
+       <td>At least 24 hours before event</td>
+       <td>0% (full refund)</td>
+      </tr>
+      <tr>
+       <td>Less than 24 hours before event</td>
+       <td>100% (no refund)</td>
+      </tr>
+     </table>
+     <button onclick="document.getElementById('cancellation-policy').style.display='none';" class='bnkm-button'>OK</button>
+    </div>
+    
+    <button onclick="document.getElementById('tnc').style.display='flex';" class='bnkm-button'>Contact Us</button>
+    <div id='tnc' class='full-screen' style='display:none'>
+     <p>Contact us at +91 96321 74071.</p>
+     <button onclick="document.getElementById('tnc').style.display='none';" class='bnkm-button'>OK</button>
+    </div>
     <p>© Bhanumati Nrityakalamandiram. All rights reserved.</p>
    </div>
   </div>
