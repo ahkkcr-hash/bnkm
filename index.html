@@ -9,7 +9,6 @@
   if (typeof google !== 'undefined' && google.script && google.script.run && !google.script.run._isMirror) {
     return;
   }
-
   window.google = {
     script: {
       run: (function() {
@@ -226,7 +225,7 @@ function nextPage()
   document.getElementById("auth-section").style.display = 'flex';
   console.log("TRIGGERING RENDER NOW!");
   //renderSeats(allMapData);
-  //hideLoader();
+  hideLoader();
   updateSelectionLabel();
   document.getElementById('submit-btn').disabled = true;
 }
