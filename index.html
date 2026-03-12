@@ -167,7 +167,12 @@
     Seats: <span id="current-selection-text">None</span>
    </div>
    <div style="flex:0.05;">
-    <a href="#" onclick="showModal('contact')">Contact Us</a> | 
+    <button onclick="document.getElementById('contact-us').style.display='none';"">Contact Us</button>
+    <div id='contact-us'>
+     <p></p>
+     <button onclick="document.getElementById('contact-us').style.display='none';">OK</button>
+    </div>
+    
     <a href="#" onclick="showModal('refund')">Refund Policy</a> | 
     <a href="#" onclick="showModal('terms')">Terms & Conditions</a>
     <p>© Bhanumati Nrityakalamandiram. All rights reserved.</p>
