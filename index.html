@@ -214,6 +214,7 @@ function BookingMode() { mode=1; nextPage(); }
 
 function nextPage()
 { document.getElementById('loading-overlay').style.display = 'flex';
+  document.getElementById('map-container').style.display = (mode === 0) ? 'none' : 'block';
   document.getElementById("welcome").style.display='none';
   document.getElementById("bookings").style.display='flex';
   document.getElementById("clear").style.display = (mode===0)?'none':'block';
@@ -253,7 +254,6 @@ function clearSelection() {
 
 function hideLoader() {
   document.getElementById('loading-overlay').style.display = 'none';
-  document.getElementById('map-container').style.display = (mode===0)?'none':'block';
   document.getElementById('submit-btn').innerText = (mode===0)?'Retrieve Booking':'Verify & Pay';
   document.getElementById('namefield').style.display = (mode===0)?'none':'flex';
   document.getElementById('selection-summary').style.display = (mode===0)?'none':'block';
@@ -690,7 +690,8 @@ function handleVerifyOTP() {
       
           // 2. Clear the map and highlight in Green (using our Mode 0 logic)
           renderSeats(allMapData, mySeatIds);
-      
+          document.getElementById('map-container').style.display = 'block';
+         
           // 3. Display the Booking Names & Details in your UI
           displayTicketSummary(userBookings);
           document.getElementById('bookings').style.display = 'flex';
