@@ -399,7 +399,8 @@ async function renderSeats(seats, mySeatIds = []) {
         group.addEventListener('click', function() { toggleSeat(this); });
       }
       if (status === "pending") setupTooltip(group, "Being booked...", "");
-      if (status === "booked") setupTooltip(group, "Already taken", "");
+      if (status === "sold") setupTooltip(group, "Already taken", "");
+      if (status === "reserved") setupTooltip(group, "Not released for booking...", "");
     } else if (isRetrievalMode && mySeatIds.includes(seatId)) {
       setupTooltip(group, "Your confirmed seat", seatId);
     }
