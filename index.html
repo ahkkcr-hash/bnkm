@@ -410,7 +410,7 @@ async function renderSeats(seats, mySeatIds = []) {
        // It's MY pending seat! Lift the barrier.
        group.style.cursor = 'pointer'; 
        group.setAttribute("class", "seat-group my-booked-seat-pending"); // Special class
-       group.addEventListener('click', function() { togglePendingToBook(this); });
+       group.addEventListener('click', function() { toggleSeat(this); });
        setupTooltip(group, "Your pending seat - Click to pay!", seatId);
      } else {
        setupTooltip(group, "Your confirmed seat", seatId);
@@ -480,6 +480,7 @@ function setupTooltip(element, message, seatId) {
   });
   element.addEventListener('mouseout', () => { tooltip.style.display = "none"; });
 }
+
 function toggleSeat(element) {
   // 1. Identify what we are flipping
   // In Mode 1, we flip 'available'. In Mode 0, we flip 'my-booked-seat-pending'.
