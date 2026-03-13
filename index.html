@@ -727,7 +727,7 @@ function handleVerifyOTP() {
         if (userBookings && userBookings.length > 0) {
           const mySeatIds = userBookings.map(b => b.seat);
           renderSeats(allMapData, mySeatIds);
-          
+          errorMsg.innerText = allMapData.length;
           document.getElementById('map-container').style.display = 'block';
           displayTicketSummary(userBookings);
           
