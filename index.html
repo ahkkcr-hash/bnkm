@@ -942,6 +942,7 @@ body::before {
   .available { fill: #a3cfbb; stroke: #198754; }
   .selected { fill: #a53; stroke: #842; }
   .sold { fill: #ea868f; cursor: not-allowed; }
+  .reserved { fill: #198754; fill-opacity: 0.5; stroke: #198754 curson: not-allowed }
 
   .seat-group { cursor: pointer; transition: transform 0.1s; }
 /* .seat-group:hover { transform: scale(1.1) translate(0, 0); } /* Slight zoom on hover */
@@ -962,6 +963,9 @@ body::before {
 
 .sold .seat-main { fill: #dee2e6; stroke: #adb5bd; }
 .sold .seat-back { fill: #adb5bd; }
+
+.reserved .seat-main { fill: #198754; fill-opacity: 0.5; stroke: #198754; }
+.reserved .seat-back { fill: #198754; }
 
 /* --- MODE 0: YOUR BOOKED SEATS (Green) --- */
 .my-booked-seat .seat-main {
