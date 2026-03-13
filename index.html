@@ -727,7 +727,6 @@ function handleVerifyOTP() {
         if (userBookings && userBookings.length > 0) {
           const mySeatIds = userBookings.map(b => b.seat);
           renderSeats(allMapData, mySeatIds);
-          errorMsg.innerText = allMapData.length;
           document.getElementById('map-container').style.display = 'block';
           displayTicketSummary(userBookings);
           
@@ -743,7 +742,7 @@ function handleVerifyOTP() {
           submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
           
           errorMsg.style.color = "#474";
-          errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
+          errorMsg.innerText = `Map Unlocked! Select your pending (amber) seats to pay. ${allMapData.length}`;
         } else {
           errorMsg.innerText = "No bookings found for this email.";
         }
