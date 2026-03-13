@@ -665,6 +665,7 @@ function handleSendOTP() {
           errorMsg.innerText = "Booking code sent to your inbox.";
           startTimer(30);
           document.getElementById('submit-btn').disabled = false;
+          document.getElementById('submit-btn').innerText = "Verify & Pay";       
         }).sendOTP(email);
       })
       .prepareForOTP(mode, email, selectedSeats);
