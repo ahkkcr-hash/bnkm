@@ -421,7 +421,8 @@ async function renderSeats(seats, mySeatIds = []) {
       // Someone else's seat in retrieval mode
       group.style.cursor = 'not-allowed';
     }
-   }
+     errorMsg.innerText = `Authenticated! Fetching your theater map...${i*100/151}`;
+    }
     // 3. APPEND TO THE LAYER: Put the seat in the protected room
     seatLayer.appendChild(group);
     // 2. Increment AFTER the seat is added
@@ -722,8 +723,6 @@ function handleVerifyOTP() {
 
     } else {
       // --- MODE 0: Retrieval ---
-      errorMsg.innerText = "Authenticated! Fetching your theater map...";
-      
       google.script.run.withSuccessHandler(function(userBookings) {
         if (userBookings && userBookings.length > 0) {
           const mySeatIds = userBookings.map(b => b.seat);
