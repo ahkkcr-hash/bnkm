@@ -342,7 +342,7 @@ function updateSelectionLabel() {
   console.log(submitBtn.innerText);
   if (mode === 0) {
     submitBtn.disabled = (selectedIds.length === 0);
-  } 
+  }
   submitBtn.innerText = submitBtn.disabled?"Please Select Seat":"Pay";
   const rowStrings = compressSeatRanges(selectedIds);
 
@@ -396,11 +396,12 @@ async function renderSeats(seats, mySeatIds = []) {
 
     group.appendChild(cushion);
     group.appendChild(backrest);
-    
+    const submitBtn = document.getElementById('submit-btn');
+  
     // --- INTERACTION LOGIC ---
     if (!isRetrievalMode) {
       if (status === 'available') {
-        group.addEventListener('click', function() { toggleSeat(this); });
+        group.addEventListener('click', function() { toggleSeat(this); submitBtn.disabled = true; });
       }
       if (status === "pending") setupTooltip(group, "Being booked...", "");
       if (status === "sold") setupTooltip(group, "Already taken", "");
