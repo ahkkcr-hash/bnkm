@@ -340,9 +340,8 @@ function updateSelectionLabel() {
   // If we've reached the "Pay" stage of Mode 0, or we are in Mode 1
   console.log(mode);
   console.log(submitBtn.innerText);
-  if (mode === 0) {
-    submitBtn.disabled = (selectedIds.length === 0);
-  }
+  
+  submitBtn.disabled = (errors>0) || (selectedIds.length === 0);
   submitBtn.innerText = submitBtn.disabled?"Please Select Seat":"Pay";
   const rowStrings = compressSeatRanges(selectedIds);
 
@@ -605,7 +604,6 @@ function handleSendOTP() {
 
   // 1. THE BARRIER: Logic Check
   let msg = "";
-  let errors = 0;
 
   // We only require seats and a name if we are BOOKING (Mode 1)
   if (mode === 1) {
