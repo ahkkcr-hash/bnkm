@@ -608,7 +608,7 @@ function handleSendOTP() {
   }
   
   // 1. The Bridge: Call the Kitchen
-  errorMsg.innerText = "Checking Seat Availability. Please wait...";
+  errorMsg.innerText = ((mode === 1)?"Checking Seat Availability. ":"") + "Please wait...";
   google.script.run
   .withSuccessHandler(function(preCheck) {
     // 2. The Kitchen Answers
