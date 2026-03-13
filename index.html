@@ -207,7 +207,7 @@
 let isRendering = false;
 let allMapData = [];
 let mode=-1;
-let errors=0;
+
 function RetrieveMode() { mode=0; nextPage(); }
 
 function BookingMode() { mode=1; nextPage(); }
@@ -340,8 +340,9 @@ function updateSelectionLabel() {
   // If we've reached the "Pay" stage of Mode 0, or we are in Mode 1
   console.log(mode);
   console.log(submitBtn.innerText);
-  
-  submitBtn.disabled = (errors>0) || (selectedIds.length === 0);
+  if (mode === 0) {
+    submitBtn.disabled = (selectedIds.length === 0);
+  }
   submitBtn.innerText = submitBtn.disabled?"Please Select Seat":"Pay";
   const rowStrings = compressSeatRanges(selectedIds);
 
@@ -362,71 +363,74 @@ async function renderSeats(seats, mySeatIds = []) {
   try {
     const seatLayer = document.getElementById('seat-layer');
     const loadingText = document.querySelector('#loading-overlay span');
-    const errorMsg = document.getElementById('error-msg'); // Define once
     const isRetrievalMode = (mode === 0);
-    let i = 0;
+    
+    // 1. Initialize the counter
+    let i = 0; 
 
     if (!seatLayer) return;
-    
-    // Set the initial message ONCE before the heavy lifting
-    if (isRetrievalMode && errorMsg) {
-       errorMsg.innerText = "Authenticated! Generating your personalized map...";
-    }
-
     while (seatLayer.firstChild) seatLayer.removeChild(seatLayer.firstChild);
 
     for (const seat of seats) {
-      const seatId = `${seat.RowName}${seat.ColNum}`;
-      const status = (seat.Status || "").toLowerCase();
-      
-      const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-      group.setAttribute("transform", `translate(${seat.X - 30}, ${seat.Y}) rotate(180)`);
-      group.dataset.id = seatId;
+    const seatId = `${seat.RowName}${seat.ColNum}`;
+    const status = (seat.Status || "").toLowerCase();
+    
+    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    group.setAttribute("transform", `translate(${seat.X - 30}, ${seat.Y}) rotate(180)`);
+    group.dataset.id = seatId;
 
-      // --- CLASS LOGIC ---
-      if (isRetrievalMode) {
-        if (mySeatIds.includes(seatId)) {
-          // If it's yours and pending, give it the interactive class
-          const finalClass = (status === 'pending') ? "my-booked-seat-pending" : "my-booked-seat";
-          group.setAttribute("class", `seat-group ${finalClass}`);
-        } else {
-          group.setAttribute("class", "seat-group mode-0-neutral");
-        }
+    // --- MODE 0 vs MODE 1 CLASS LOGIC ---
+    if (isRetrievalMode) {
+      if (mySeatIds.includes(seatId)) {
+        group.setAttribute("class", "seat-group my-booked-seat");
       } else {
-        group.setAttribute("class", `seat-group ${status}`);
+        group.setAttribute("class", "seat-group mode-0-neutral");
       }
+    } else {
+      group.setAttribute("class", `seat-group ${status}`);
+    }
 
-      group.appendChild(createSVGRect("-15", "-15", "30", "30", "5", "seat-main"));
-      group.appendChild(createSVGRect("-15", "-18", "30", "8", "3", "seat-back"));
+    // Drawing the seat parts
+    const cushion = createSVGRect("-15", "-15", "30", "30", "5", "seat-main");
+    const backrest = createSVGRect("-15", "-18", "30", "8", "3", "seat-back");
 
-      // --- INTERACTION LOGIC ---
-      if (!isRetrievalMode) {
-        if (status === 'available') {
-          group.addEventListener('click', function() { toggleSeat(this); });
-        }
-        // Tooltips for non-available seats
-        if (status !== 'available') setupTooltip(group, status.toUpperCase(), "");
-      } else {
-        // MODE 0: Only your own seats get tooltips or clicks
-        if (mySeatIds.includes(seatId)) {
-          if (status === 'pending') {
-            group.style.cursor = 'pointer';
-            group.addEventListener('click', function() { toggleSeat(this); });
-            setupTooltip(group, "Your pending seat - Click to pay!", seatId);
-          } else {
-            setupTooltip(group, "Your confirmed seat", seatId);
-          }
-        } else {
-          group.style.cursor = 'not-allowed';
-        }
+    group.appendChild(cushion);
+    group.appendChild(backrest);
+    const submitBtn = document.getElementById('submit-btn');
+  
+    // --- INTERACTION LOGIC ---
+    if (!isRetrievalMode) {
+      if (status === 'available') {
+        group.addEventListener('click', function() { toggleSeat(this); submitBtn.disabled = true; });
       }
+      if (status === "pending") setupTooltip(group, "Being booked...", "");
+      if (status === "sold") setupTooltip(group, "Already taken", "");
+      if (status === "reserved") setupTooltip(group, "Not released for booking...", "");
+    } else {
+   // MODE 0: Retrieval
+   if (mySeatIds.includes(seatId)) {
+     if (status === 'pending') {
+       // It's MY pending seat! Lift the barrier.
+       group.style.cursor = 'pointer'; 
+       group.setAttribute("class", "seat-group my-booked-seat-pending"); // Special class
+       group.addEventListener('click', function() { toggleSeat(this); });
+       setupTooltip(group, "Your pending seat - Click to pay!", seatId);
+     } else {
+       setupTooltip(group, "Your confirmed seat", seatId);
+     }
+    } else {
+      // Someone else's seat in retrieval mode
+      group.style.cursor = 'not-allowed';
+    }
+   }
+    // 3. APPEND TO THE LAYER: Put the seat in the protected room
+    seatLayer.appendChild(group);
+    // 2. Increment AFTER the seat is added
+      i++; 
 
-      seatLayer.appendChild(group);
-      i++;
-
+      // 3. Update the UI every 10 seats
       if (i % 10 === 0 || i === seats.length) {
         loadingText.innerText = `Synchronizing: ${i} / ${seats.length} Seats`;
-        // This is the "Breath" that keeps the browser from freezing
         await new Promise(resolve => requestAnimationFrame(resolve));
       }
     }
@@ -601,6 +605,7 @@ function handleSendOTP() {
 
   // 1. THE BARRIER: Logic Check
   let msg = "";
+  let errors = 0;
 
   // We only require seats and a name if we are BOOKING (Mode 1)
   if (mode === 1) {
@@ -618,8 +623,6 @@ function handleSendOTP() {
     errors++;
     msg += "Please enter a valid email ID!";
   }
-
-  console.log(errors);
 
   if (errors > 0) {
     errorMsg.style.color = "#e55";
@@ -719,10 +722,13 @@ function handleVerifyOTP() {
 
     } else {
       // --- MODE 0: Retrieval ---
+      errorMsg.innerText = "Authenticated! Fetching your theater map...";
+      
       google.script.run.withSuccessHandler(function(userBookings) {
         if (userBookings && userBookings.length > 0) {
           const mySeatIds = userBookings.map(b => b.seat);
           renderSeats(allMapData, mySeatIds);
+          
           document.getElementById('map-container').style.display = 'block';
           displayTicketSummary(userBookings);
           
@@ -738,7 +744,7 @@ function handleVerifyOTP() {
           submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
           
           errorMsg.style.color = "#474";
-          errorMsg.innerText = `Map Unlocked! Select your pending (amber) seats to pay.`;
+          errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
         } else {
           errorMsg.innerText = "No bookings found for this email.";
         }
