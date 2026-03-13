@@ -700,6 +700,8 @@ function handleVerifyOTP() {
       errorMsg.innerText = "Incorrect Code. Try again.";
       return;
     }
+    submitBtn.innerText = "Pleast Select Seat(s)";
+    console.log("I've executed", submitBtn.innerText);
 
     if (mode === 1) {
       // --- MODE 1: Fresh Booking ---
@@ -728,8 +730,6 @@ function handleVerifyOTP() {
           displayTicketSummary(userBookings);
           
           // CHANGE THE BUTTON: Now it's for Payment, not Retrieval
-          submitBtn.innerText = "Pay for Selected Seats";
-          console.log("I've executed", submitBtn.innerText);
           submitBtn.disabled = true; // Disabled until they select an Amber seat
           
           // Hide the Auth section inputs but keep the button visible
