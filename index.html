@@ -421,7 +421,7 @@ async function renderSeats(seats, mySeatIds = []) {
       // Someone else's seat in retrieval mode
       group.style.cursor = 'not-allowed';
     }
-     errorMsg.innerText = `Authenticated! Fetching your theater map...${i*100/151}`;
+     errorMsg.innerText = `Authenticated! Fetching your theater map...`;
     }
     // 3. APPEND TO THE LAYER: Put the seat in the protected room
     seatLayer.appendChild(group);
@@ -742,7 +742,7 @@ function handleVerifyOTP() {
           submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
           
           errorMsg.style.color = "#474";
-          errorMsg.innerText = `Map Unlocked! Select your pending (amber) seats to pay. ${allMapData.length}`;
+          errorMsg.innerText = `Map Unlocked! Select your pending (amber) seats to pay.`;
         } else {
           errorMsg.innerText = "No bookings found for this email.";
         }
