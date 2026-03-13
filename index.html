@@ -401,7 +401,7 @@ async function renderSeats(seats, mySeatIds = []) {
     // --- INTERACTION LOGIC ---
     if (!isRetrievalMode) {
       if (status === 'available') {
-        group.addEventListener('click', function() { toggleSeat(this); submitBtn.disabled = true; });
+        group.addEventListener('click', function() { toggleSeat(this); });
       }
       if (status === "pending") setupTooltip(group, "Being booked...", "");
       if (status === "sold") setupTooltip(group, "Already taken", "");
