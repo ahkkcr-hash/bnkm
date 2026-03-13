@@ -362,75 +362,71 @@ async function renderSeats(seats, mySeatIds = []) {
   try {
     const seatLayer = document.getElementById('seat-layer');
     const loadingText = document.querySelector('#loading-overlay span');
+    const errorMsg = document.getElementById('error-msg'); // Define once
     const isRetrievalMode = (mode === 0);
-    
-    // 1. Initialize the counter
-    let i = 0; 
+    let i = 0;
 
     if (!seatLayer) return;
+    
+    // Set the initial message ONCE before the heavy lifting
+    if (isRetrievalMode && errorMsg) {
+       errorMsg.innerText = "Authenticated! Generating your personalized map...";
+    }
+
     while (seatLayer.firstChild) seatLayer.removeChild(seatLayer.firstChild);
 
     for (const seat of seats) {
-    const seatId = `${seat.RowName}${seat.ColNum}`;
-    const status = (seat.Status || "").toLowerCase();
-    
-    const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    group.setAttribute("transform", `translate(${seat.X - 30}, ${seat.Y}) rotate(180)`);
-    group.dataset.id = seatId;
+      const seatId = `${seat.RowName}${seat.ColNum}`;
+      const status = (seat.Status || "").toLowerCase();
+      
+      const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      group.setAttribute("transform", `translate(${seat.X - 30}, ${seat.Y}) rotate(180)`);
+      group.dataset.id = seatId;
 
-    // --- MODE 0 vs MODE 1 CLASS LOGIC ---
-    if (isRetrievalMode) {
-      if (mySeatIds.includes(seatId)) {
-        group.setAttribute("class", "seat-group my-booked-seat");
+      // --- CLASS LOGIC ---
+      if (isRetrievalMode) {
+        if (mySeatIds.includes(seatId)) {
+          // If it's yours and pending, give it the interactive class
+          const finalClass = (status === 'pending') ? "my-booked-seat-pending" : "my-booked-seat";
+          group.setAttribute("class", `seat-group ${finalClass}`);
+        } else {
+          group.setAttribute("class", "seat-group mode-0-neutral");
+        }
       } else {
-        group.setAttribute("class", "seat-group mode-0-neutral");
+        group.setAttribute("class", `seat-group ${status}`);
       }
-    } else {
-      group.setAttribute("class", `seat-group ${status}`);
-    }
 
-    // Drawing the seat parts
-    const cushion = createSVGRect("-15", "-15", "30", "30", "5", "seat-main");
-    const backrest = createSVGRect("-15", "-18", "30", "8", "3", "seat-back");
+      group.appendChild(createSVGRect("-15", "-15", "30", "30", "5", "seat-main"));
+      group.appendChild(createSVGRect("-15", "-18", "30", "8", "3", "seat-back"));
 
-    group.appendChild(cushion);
-    group.appendChild(backrest);
-    const submitBtn = document.getElementById('submit-btn');
-  
-    // --- INTERACTION LOGIC ---
-    if (!isRetrievalMode) {
-      if (status === 'available') {
-        group.addEventListener('click', function() { toggleSeat(this); });
+      // --- INTERACTION LOGIC ---
+      if (!isRetrievalMode) {
+        if (status === 'available') {
+          group.addEventListener('click', function() { toggleSeat(this); });
+        }
+        // Tooltips for non-available seats
+        if (status !== 'available') setupTooltip(group, status.toUpperCase(), "");
+      } else {
+        // MODE 0: Only your own seats get tooltips or clicks
+        if (mySeatIds.includes(seatId)) {
+          if (status === 'pending') {
+            group.style.cursor = 'pointer';
+            group.addEventListener('click', function() { toggleSeat(this); });
+            setupTooltip(group, "Your pending seat - Click to pay!", seatId);
+          } else {
+            setupTooltip(group, "Your confirmed seat", seatId);
+          }
+        } else {
+          group.style.cursor = 'not-allowed';
+        }
       }
-      if (status === "pending") setupTooltip(group, "Being booked...", "");
-      if (status === "sold") setupTooltip(group, "Already taken", "");
-      if (status === "reserved") setupTooltip(group, "Not released for booking...", "");
-    } else {
-   // MODE 0: Retrieval
-   if (mySeatIds.includes(seatId)) {
-     if (status === 'pending') {
-       // It's MY pending seat! Lift the barrier.
-       group.style.cursor = 'pointer'; 
-       group.setAttribute("class", "seat-group my-booked-seat-pending"); // Special class
-       group.addEventListener('click', function() { toggleSeat(this); });
-       setupTooltip(group, "Your pending seat - Click to pay!", seatId);
-     } else {
-       setupTooltip(group, "Your confirmed seat", seatId);
-     }
-    } else {
-      // Someone else's seat in retrieval mode
-      group.style.cursor = 'not-allowed';
-    }
-     errorMsg.innerText = `Authenticated! Fetching your theater map...`;
-    }
-    // 3. APPEND TO THE LAYER: Put the seat in the protected room
-    seatLayer.appendChild(group);
-    // 2. Increment AFTER the seat is added
-      i++; 
 
-      // 3. Update the UI every 10 seats
+      seatLayer.appendChild(group);
+      i++;
+
       if (i % 10 === 0 || i === seats.length) {
         loadingText.innerText = `Synchronizing: ${i} / ${seats.length} Seats`;
+        // This is the "Breath" that keeps the browser from freezing
         await new Promise(resolve => requestAnimationFrame(resolve));
       }
     }
