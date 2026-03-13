@@ -623,13 +623,13 @@ function handleSendOTP() {
     msg += "Please enter a valid email ID!";
   }
 
+  console.log(errors);
+
   if (errors > 0) {
     errorMsg.style.color = "#e55";
     errorBlinker(errorMsg, msg);
     return;
   }
-
-  console.log(errors);
 
   // 2. THE BRANCHING PATH
   if (mode === 0) {
