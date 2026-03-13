@@ -342,6 +342,7 @@ function updateSelectionLabel() {
   console.log(submitBtn.innerText);
   
   submitBtn.disabled = (errors>0) || (selectedIds.length === 0);
+  console.log
   submitBtn.innerText = submitBtn.disabled?"Please Select Seat":"Pay";
   const rowStrings = compressSeatRanges(selectedIds);
 
@@ -627,6 +628,8 @@ function handleSendOTP() {
     errorBlinker(errorMsg, msg);
     return;
   }
+
+  console.log(errors);
 
   // 2. THE BRANCHING PATH
   if (mode === 0) {
