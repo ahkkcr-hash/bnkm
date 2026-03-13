@@ -730,6 +730,7 @@ function handleVerifyOTP() {
           
           // CHANGE THE BUTTON: Now it's for Payment, not Retrieval
           submitBtn.innerText = "Pay for Selected Seats";
+          console.log("I've executed",submitBtn.innerText);
           submitBtn.disabled = true; // Disabled until they select an Amber seat
           
           // Hide the Auth section inputs but keep the button visible
