@@ -338,6 +338,8 @@ function updateSelectionLabel() {
 
   // --- THE HANDSHAKE ---
   // If we've reached the "Pay" stage of Mode 0, or we are in Mode 1
+  console.log(mode);
+  console.log(submitBtn.innerText);
   if (submitBtn.innerText === "Pay for Selected Seats" || mode === 1) {
     submitBtn.disabled = (selectedIds.length === 0);
   }
