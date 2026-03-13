@@ -333,12 +333,18 @@ function compressSeatRanges(seats) {
 function updateSelectionLabel() {
   const selectedIds = getSelectedSeatArray();
   const label = document.getElementById('current-selection-text');
-  if (!label) return;
+  const submitBtn = document.getElementById('submit-btn');
+  if (!label || !submitBtn) return;
+
+  // --- THE HANDSHAKE ---
+  // If we've reached the "Pay" stage of Mode 0, or we are in Mode 1
+  if (submitBtn.innerText === "Pay for Selected Seats" || mode === 1) {
+    submitBtn.disabled = (selectedIds.length === 0);
+  }
 
   const rowStrings = compressSeatRanges(selectedIds);
 
   if (rowStrings.length > 0) {
-    // Join with <br> for the HTML display
     label.innerHTML = "<br>" + rowStrings.join("; ");
     label.style.color = "#27ae60"; 
   } else {
@@ -397,10 +403,23 @@ async function renderSeats(seats, mySeatIds = []) {
       if (status === "pending") setupTooltip(group, "Being booked...", "");
       if (status === "sold") setupTooltip(group, "Already taken", "");
       if (status === "reserved") setupTooltip(group, "Not released for booking...", "");
-    } else if (isRetrievalMode && mySeatIds.includes(seatId)) {
-      setupTooltip(group, "Your confirmed seat", seatId);
+    } else {
+   // MODE 0: Retrieval
+   if (mySeatIds.includes(seatId)) {
+     if (status === 'pending') {
+       // It's MY pending seat! Lift the barrier.
+       group.style.cursor = 'pointer'; 
+       group.setAttribute("class", "seat-group my-booked-seat-pending"); // Special class
+       group.addEventListener('click', function() { togglePendingToBook(this); });
+       setupTooltip(group, "Your pending seat - Click to pay!", seatId);
+     } else {
+       setupTooltip(group, "Your confirmed seat", seatId);
+     }
+    } else {
+      // Someone else's seat in retrieval mode
+      group.style.cursor = 'not-allowed';
     }
-
+   }
     // 3. APPEND TO THE LAYER: Put the seat in the protected room
     seatLayer.appendChild(group);
     // 2. Increment AFTER the seat is added
@@ -461,17 +480,18 @@ function setupTooltip(element, message, seatId) {
   });
   element.addEventListener('mouseout', () => { tooltip.style.display = "none"; });
 }
-
 function toggleSeat(element) {
-  // 1. Toggle color (The "Physical" state change)
-  if (element.classList.contains('available')) {
-    element.classList.replace('available', 'selected');
-  } else if (element.classList.contains('selected')) {
-    element.classList.replace('selected', 'available');
+  // 1. Identify what we are flipping
+  // In Mode 1, we flip 'available'. In Mode 0, we flip 'my-booked-seat-pending'.
+  const targetClass = (mode === 0) ? 'my-booked-seat-pending' : 'available';
+
+  if (element.classList.contains('selected')) {
+    element.classList.replace('selected', targetClass);
+  } else if (element.classList.contains(targetClass)) {
+    element.classList.replace(targetClass, 'selected');
   }
 
-  // 2. The "Unified" Update Logic
-  // We call our specialized functions here to handle the math and the UI
+  // 2. Trigger the Central Command to update the labels and the button
   updateSelectionLabel();
 }
 
@@ -576,67 +596,75 @@ function handleSendOTP() {
   const name = document.getElementById('cust-name').value;
   const email = document.getElementById('user-email').value;
   const sendBtn = document.getElementById('send-btn');
-  const timerDisplay = document.getElementById('timer-display');
   const errorMsg = document.getElementById('error-msg');
-  const submitBtn = document.getElementById('submit-btn');
-  const selectedSeats = getSelectedSeatArray(); // Your seat-grabbing helper
+  const selectedSeats = getSelectedSeatArray();
 
-  // THE BARRIER: Logic Check
-  msg = "";
-  errors = 0;
-  if (selectedSeats.length === 0 && mode === 1) {
-    errors = errors + 1;
-    msg += "Please select at least one seat first!";
+  // 1. THE BARRIER: Logic Check
+  let msg = "";
+  let errors = 0;
+
+  // We only require seats and a name if we are BOOKING (Mode 1)
+  if (mode === 1) {
+    if (selectedSeats.length === 0) {
+      errors++;
+      msg += "Please select at least one seat first!\n";
+    }
+    if (!name) {
+      errors++;
+      msg += "Please enter your name!\n";
+    }
   }
- 
+  
   if (!email.includes('@')) {
-    if (errors > 0) msg += "\n";
-    errors = errors + 1;
-    msg += "Please enter a valid email id!";
+    errors++;
+    msg += "Please enter a valid email ID!";
   }
-  
-  if (!name && mode === 1) {
-    if (errors > 0) msg += "\n";
-    errors = errors + 1;
-    msg += "Please enter a name!";
-  }
-  
+
   if (errors > 0) {
     errorMsg.style.color = "#e55";
     errorBlinker(errorMsg, msg);
     return;
   }
-  
-  // 1. The Bridge: Call the Kitchen
-  errorMsg.innerText = ((mode === 1)?"Checking Seat Availability. ":"") + "Please wait...";
-  google.script.run
-  .withSuccessHandler(function(preCheck) {
-    // 2. The Kitchen Answers
-    if (!preCheck.success) {
-      errorMsg.style.color = "#e55";
-      errorBlinker(errorMsg, preCheck.message);
-      sendBtn.disabled = false; // Let them try again with different seats
-      return; 
-    }
 
-    // 3. ONLY IF SUCCESS: Proceed with the OTP sequence
+  // 2. THE BRANCHING PATH
+  if (mode === 0) {
+    // --- MODE 0: RETRIEVAL ---
+    // No need to "Prepare/Lock" seats because they are already yours/pending!
+    errorMsg.innerText = "Sending your access code...";
     sendBtn.disabled = true;
-    sendBtn.innerText = "Resend";
-    submitBtn.disabled = false;
-    errorMsg.innerText = ((mode === 1)?"Seats held!\n":"") + "Sending booking code...";
 
-    // Trigger the actual OTP email function in your Code.gs
-    google.script.run.withSuccessHandler(function() {
-      errorMsg.innerText = "Booking code sent to your inbox.";
-      startTimer(30); 
-    }).sendOTP(email);
-  })
-  .withFailureHandler(function(err) {
-    // If the "Telephone Line" itself breaks
-    errorBlinker(errorMsg, "Kitchen Connection Error. Please try again.");
-    sendBtn.disabled = false;
-  })
-  .prepareForOTP(mode, email, selectedSeats);
+    google.script.run
+      .withSuccessHandler(function() {
+        errorMsg.innerText = "Access code sent to your inbox.";
+        startTimer(30);
+        document.getElementById('submit-btn').disabled = false;
+      })
+      .sendOTP(email);
+
+  } else {
+    // --- MODE 1: BOOKING ---
+    // Standard procedure: Lock the seats first
+    errorMsg.innerText = "Checking Seat Availability. Please wait...";
+    sendBtn.disabled = true;
+
+    google.script.run
+      .withSuccessHandler(function(preCheck) {
+        if (!preCheck.success) {
+          errorMsg.style.color = "#e55";
+          errorBlinker(errorMsg, preCheck.message);
+          sendBtn.disabled = false;
+          return;
+        }
+        
+        errorMsg.innerText = "Seats held!\nSending booking code...";
+        google.script.run.withSuccessHandler(function() {
+          errorMsg.innerText = "Booking code sent to your inbox.";
+          startTimer(30);
+          document.getElementById('submit-btn').disabled = false;
+        }).sendOTP(email);
+      })
+      .prepareForOTP(mode, email, selectedSeats);
+  }
 }
 
 function startTimer(seconds) {
@@ -660,62 +688,85 @@ function startTimer(seconds) {
 function handleVerifyOTP() {
   const email = document.getElementById('user-email').value;
   const otp = document.getElementById('otp-input').value;
-  const selectedSeats = getSelectedSeatArray();
-  const submitBtn = document.getElementById('submit-btn');
   const errorMsg = document.getElementById('error-msg');
-  errorMsg.innerText = "Verifying Booking Code...";
+  const submitBtn = document.getElementById('submit-btn');
+
+  errorMsg.innerText = "Verifying Code...";
   
   google.script.run.withSuccessHandler(function(isValid) {
-    if (isValid) {
-      // OTP matched! Now create the official Razorpay Order
-      errorMsg.innerText = (mode===0)?"Authenticated! Retrieving Booking. Please wait...":"Authenticated! Verifying seat availability. Please wait...";
-      if(mode===1)
-      {
-        google.script.run.withSuccessHandler(function(orderResponse) {
-          if (orderResponse.success) {
-            triggerRazorpayCheckout(orderResponse);
-          } else {
-            alert(orderResponse.message);
-            location.reload(); // Refresh if seats were stolen
-          }
-        }).createBulkOrder(selectedSeats, email);
-      }
-      else {
-      // --- MODE 0: RETRIEVAL LOGIC ---
-        errorMsg.innerText = "Authenticated! Fetching your seats...";
-        google.script.run.withSuccessHandler(function(userBookings) {
-        if (userBookings && userBookings.length > 0) {
-          // 1. Extract just the seat IDs for the highlighter
-          const mySeatIds = userBookings.map(b => b.seat);
+    if (!isValid) {
+      errorMsg.innerText = "Incorrect Code. Try again.";
+      return;
+    }
+
+    if (mode === 1) {
+      // --- MODE 1: Fresh Booking ---
+      errorMsg.innerText = "Authenticated! Finalizing order...";
+      const selectedSeats = getSelectedSeatArray();
       
-          // 2. Clear the map and highlight in Green (using our Mode 0 logic)
-          renderSeats(allMapData, mySeatIds);
-          document.getElementById('map-container').style.display = 'block';
-         
-          // 3. Display the Booking Names & Details in your UI
-          displayTicketSummary(userBookings);
-          document.getElementById('bookings').style.display = 'flex';
-          document.getElementById('map-container').style.display = 'block';
-          errorMsg.style.color = "#474";
-          errorMsg.innerText = "Booking Loaded Successfully!\nSee above: the seat map to find them.\nSee below: booked names for each seat.";
-          submitBtn.disabled = true;
-          document.getElementById("auth-section").style.display = 'none';
-          document.getElementById("resend-container").style.display = 'flex';
+      google.script.run.withSuccessHandler(function(orderResponse) {
+        if (orderResponse.success) {
+          triggerRazorpayCheckout(orderResponse);
         } else {
-          document.getElementById('error-msg').innerText = "No bookings found for this email.";
-          // Optional: Reset map to neutral if no bookings found
-          renderSeats(allMapData, []); 
+          alert(orderResponse.message);
+          location.reload();
         }
-        const sendBtn = document.getElementById('send-btn');
-        sendBtn.disabled = false;
-        sendBtn.innerText = 'Send OTP';
-        startTimer(0);
-        }).getUserBookingDetails(email); // The server-side function we planned
-      }
+      }).createBulkOrder(selectedSeats, email);
+
     } else {
-      document.getElementById('error-msg').innerText = "Incorrect Booking Code. Try again.";
+      // --- MODE 0: Retrieval ---
+      errorMsg.innerText = "Authenticated! Fetching your theater map...";
+      
+      google.script.run.withSuccessHandler(function(userBookings) {
+        if (userBookings && userBookings.length > 0) {
+          const mySeatIds = userBookings.map(b => b.seat);
+          renderSeats(allMapData, mySeatIds);
+          
+          document.getElementById('map-container').style.display = 'block';
+          displayTicketSummary(userBookings);
+          
+          // CHANGE THE BUTTON: Now it's for Payment, not Retrieval
+          submitBtn.innerText = "Pay for Selected Seats";
+          submitBtn.disabled = true; // Disabled until they select an Amber seat
+          
+          // Hide the Auth section inputs but keep the button visible
+          document.getElementById('namefield').style.display = 'none';
+          document.getElementById('otp-input').style.display = 'none';
+          document.getElementById('send-btn').style.display = 'none';
+          
+          // Repurpose the button's click event for the second step
+          submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
+          
+          errorMsg.style.color = "#474";
+          errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
+        } else {
+          errorMsg.innerText = "No bookings found for this email.";
+        }
+      }).getUserBookingDetails(email);
     }
   }).verifyOTP(email, otp);
+}
+
+function handleFinalRetrievedPayment() {
+  const email = document.getElementById('user-email').value;
+  const selectedSeats = getSelectedSeatArray();
+  const errorMsg = document.getElementById('error-msg');
+
+  if (selectedSeats.length === 0) {
+    errorMsg.innerText = "Please select at least one pending seat to pay.";
+    return;
+  }
+
+  errorMsg.innerText = "Preparing payment gateway...";
+  
+  // Cross the Grand Canyon one last time to get the Razorpay Order ID
+  google.script.run.withSuccessHandler(function(orderResponse) {
+    if (orderResponse.success) {
+      triggerRazorpayCheckout(orderResponse);
+    } else {
+      alert(orderResponse.message);
+    }
+  }).createBulkOrder(selectedSeats, email);
 }
 
 function triggerRazorpayCheckout(orderData) {
@@ -952,6 +1003,31 @@ body::before {
 }
   .pending .seat-back { 
   fill: #ffc107; 
+}
+
+ /* Default Pending (Someone else's) */
+.pending { 
+  cursor: not-allowed !important; 
+}
+
+/* YOUR Pending (Interactive) */
+.my-booked-seat-pending {
+  cursor: pointer !important;
+}
+
+.my-booked-seat-pending .seat-main {
+  fill: #fff; /* White cushion */
+  stroke: #f39c12; /* Amber border */
+  stroke-width: 3px;
+}
+
+.my-booked-seat-pending .seat-back {
+  fill: #f39c12; /* Amber backrest */
+}
+
+/* Hover effect ONLY for your own pending seats */
+.my-booked-seat-pending:hover .seat-main {
+  filter: brightness(0.9);
 }
 /* Base Colors */
   .available .seat-main { fill: #ffffff; stroke: #198754; stroke-width: 2; }
