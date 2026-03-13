@@ -693,6 +693,7 @@ function handleVerifyOTP() {
       
           // 3. Display the Booking Names & Details in your UI
           displayTicketSummary(userBookings);
+          document.getElementById('bookings').style.display = 'flex';
           document.getElementById('map-container').style.display = 'block';
           errorMsg.style.color = "#474";
           errorMsg.innerText = "Booking Loaded Successfully!\nSee above: the seat map to find them.\nSee below: booked names for each seat.";
