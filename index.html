@@ -343,7 +343,6 @@ function updateSelectionLabel() {
   if (mode === 0) {
     submitBtn.disabled = (selectedIds.length === 0);
   }
-  submitBtn.innerText = submitBtn.disabled?"Please Select Seat":"Pay";
   const rowStrings = compressSeatRanges(selectedIds);
 
   if (rowStrings.length > 0) {
