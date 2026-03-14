@@ -713,7 +713,6 @@ function handleVerifyOTP() {
       errorMsg.innerText = "Incorrect Code. Try again.";
       return;
     }
-    submitBtn.innerText = "Pay";
     console.log("I've executed", submitBtn.innerText);
 
     if (mode === 1) {
@@ -754,6 +753,8 @@ function handleVerifyOTP() {
           submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
           
           errorMsg.style.color = "#474";
+          submitBtn.innerText = "Pay";
+          updateSelectionLabel();
           errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
         } else {
           errorMsg.innerText = "No bookings found for this email.";
