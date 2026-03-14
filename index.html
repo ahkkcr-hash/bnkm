@@ -897,11 +897,20 @@ function displayTicketSummary(bookings) {
                 <h4>${document.getElementById('user-email').value}</h4>
                 <hr style="border: 1px solid #444;">`;
   
-  bookings.forEach(b => {
+  bookings.sold.forEach(b => {
     html += `<p><strong>Seat ${b.seat}:</strong> ${b.name}</p>`;
   });
   
   html += `</div>`;
+  html += `<div class="ticket-card">
+                <h3>Your Pending Seats - click to book</h3>
+                <h4>${document.getElementById('user-email').value}</h4>
+                <hr style="border: 1px solid #444;">`;
+  bookings.pending.forEach(b => {
+    html += `<p><strong>Seat ${b.seat}:</strong> ${b.name}</p>`;
+  });
+  html += `</div>`;
+ 
   detailsDiv.innerHTML = html;
   detailsDiv.style.display = 'block'; // Ensure it's visible
 }
