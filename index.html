@@ -221,6 +221,7 @@ function nextPage()
   document.getElementById("bookings").style.height = (mode===0)?'92vh':'85vh';
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
+  document.getElementById("send-btn").style.display = 'flex';
   console.log("TRIGGERING RENDER NOW!");
   renderSeats(allMapData);
   hideLoader();
