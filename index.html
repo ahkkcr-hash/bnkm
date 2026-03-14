@@ -221,8 +221,17 @@ function nextPage()
   document.getElementById("bookings").style.height = (mode===0)?'92vh':'85vh';
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
-  document.getElementById("send-btn").style.display = 'flex';
-  console.log("TRIGGERING RENDER NOW!");
+  const sendBtn = document.getElementById("send-btn");
+  //const parentDiv = sendBtn.parentElement; // The div with the 'flex' property
+
+  // 1. Restore the Parent's layout
+  //parentDiv.style.display = 'flex';
+  //parentDiv.style.flexDirection = 'column'; // Or 'row' depending on your design
+
+  // 2. Restore the Button's appearance and ratio
+  sendBtn.style.display = 'inline-block'; // This keeps the text centered!
+  sendBtn.style.flex = '0.5';             // This gives it the 50% width/height ratio
+  sendBtn.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
   renderSeats(allMapData);
   hideLoader();
   updateSelectionLabel();
