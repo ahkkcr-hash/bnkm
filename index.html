@@ -755,6 +755,7 @@ function handleVerifyOTP() {
           errorMsg.style.color = "#474";
           submitBtn.innerText = "Pay";
           updateSelectionLabel();
+          document.getElementById('resend-container').style.display = 'flex';
           errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
         } else {
           errorMsg.innerText = "No bookings found for this email.";
