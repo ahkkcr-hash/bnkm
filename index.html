@@ -734,33 +734,46 @@ function handleVerifyOTP() {
       errorMsg.innerText = "Authenticated! Fetching your theater map...";
       
       google.script.run.withSuccessHandler(function(userBookings) {
-        if (userBookings && userBookings.length > 0) {
-          const mySeatIds = userBookings.map(b => b.seat);
-          renderSeats(allMapData, mySeatIds);
-          
-          document.getElementById('map-container').style.display = 'block';
-          displayTicketSummary(userBookings);
-          
-          // CHANGE THE BUTTON: Now it's for Payment, not Retrieval
-          submitBtn.disabled = true; // Disabled until they select an Amber seat
-          
-          // Hide the Auth section inputs but keep the button visible
-          document.getElementById('namefield').style.display = 'none';
-          document.getElementById('otp-input').style.display = 'none';
-          document.getElementById('send-btn').style.display = 'none';
-          
-          // Repurpose the button's click event for the second step
-          submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
-          
-          errorMsg.style.color = "#474";
-          submitBtn.innerText = "Pay";
-          updateSelectionLabel();
-          document.getElementById('resend-container').style.display = 'flex';
-          errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
-        } else {
-          errorMsg.innerText = "No bookings found for this email.";
-        }
-      }).getUserBookingDetails(email);
+  // 1. Check if there's ANY data at all
+  if (userBookings.sold.length > 0 || userBookings.pending.length > 0) {
+    
+    // 2. Combine all IDs so the map highlights BOTH sold and pending
+    const allMySeatIds = [
+      ...userBookings.sold.map(b => b.seat),
+      ...userBookings.pending.map(b => b.seat)
+    ];
+    
+    renderSeats(allMapData, allMySeatIds);
+    document.getElementById('map-container').style.display = 'block';
+
+    // 3. Display the summaries (We'll update this helper function next)
+    displayTicketSummary(userBookings); 
+
+    // 4. Handle the "Pay" Button Visibility
+    if (userBookings.pending.length > 0) {
+      submitBtn.innerText = "Pay";
+      submitBtn.style.display = 'block';
+      submitBtn.disabled = true; 
+      submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
+      errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
+    } else {
+      submitBtn.style.display = 'none'; // Nothing to pay for
+      errorMsg.innerText = "All seats confirmed. No pending payments!";
+    }
+
+    // 5. Cleanup the Auth UI
+    document.getElementById('namefield').style.display = 'none';
+    document.getElementById('otp-input').style.display = 'none';
+    document.getElementById('send-btn').style.display = 'none';
+    document.getElementById('resend-container').style.display = 'flex';
+    
+    errorMsg.style.color = "#474";
+    updateSelectionLabel();
+    
+  } else {
+    errorMsg.innerText = "No bookings found for this email.";
+  }
+}).getUserBookingDetails(email);
     }
   }).verifyOTP(email, otp);
 }
