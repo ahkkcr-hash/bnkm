@@ -892,9 +892,9 @@ function displayTicketSummary(bookings) {
   const detailsDiv = document.getElementById('retrieval-details');
   if (!detailsDiv) return;
 
-  let html = `<div class="ticket-card">
-                <h3>Your Confirmed Seats</h3>
-                <h4>${document.getElementById('user-email').value}</h4>
+  let html = `<h3>${document.getElementById('user-email').value}</h4>
+              <div class="ticket-card">
+                <h4>Your Confirmed Seats</h3>
                 <hr style="border: 1px solid #444;">`;
   
   bookings.sold.forEach(b => {
@@ -903,8 +903,7 @@ function displayTicketSummary(bookings) {
   
   html += `</div>`;
   html += `<div class="ticket-card">
-                <h3>Your Pending Seats - click to book</h3>
-                <h4>${document.getElementById('user-email').value}</h4>
+                <h4>Your Pending Seats - click to book</h3>
                 <hr style="border: 1px solid #444;">`;
   bookings.pending.forEach(b => {
     html += `<p><strong>Seat ${b.seat}:</strong> ${b.name}</p>`;
