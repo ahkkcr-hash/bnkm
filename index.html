@@ -806,6 +806,7 @@ function handleFinalRetrievedPayment() {
   const email = document.getElementById('user-email').value;
   const selectedSeats = getSelectedSeatArray();
   const errorMsg = document.getElementById('error-msg');
+  document.getElementById('submit-btn').innerText = 'Pay Now';
   document.getElementById('loading-overlay').style.display = 'none';
   if (selectedSeats.length === 0) {
     errorMsg.innerText = "Please select at least one pending seat to pay.";
