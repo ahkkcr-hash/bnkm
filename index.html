@@ -129,7 +129,7 @@
       </div>
 
       <div style="display: flex; gap: 10px; margin-bottom: 10px; height: 50px">
-       <label style="flex:0.2">Email Address:</label>
+       <label id='email-label' style="flex:0.2">Email Address:</label>
        <input type="email" id="user-email" placeholder="name@example.com" style="flex:0.5" class="bnkm-inputs">
        <div style="flex:0.3; display: flex; flex-direction: column">
         <button id="send-btn" onclick="handleSendOTP()" class="bnkm-button" style="padding:0px; margin-bottom:0px; flex:0.5; align-text: center">Send OTP</button>
@@ -222,6 +222,7 @@ function nextPage()
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
   const emailBtn = document.getElementById('user-email');
+  const emailLbl = document.getElementById('email-label');
   const sendBtn = document.getElementById("send-btn");
   const sendLbl = document.getElementById("otp-label");
   const submitBtn = document.getElementById("submit-btn");
@@ -248,6 +249,9 @@ function nextPage()
   emailBtn.style.display = 'inline-block'; // This keeps the text centered!
   emailBtn.style.flex = '0.5';             // This gives it the 50% width/height ratio
   emailBtn.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
+  emailLbl.style.display = 'inline-block'; // This keeps the text centered!
+  emailLbl.style.flex = '0.2';             // This gives it the 50% width/height ratio
+  emailLbl.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
   renderSeats(allMapData);
   hideLoader();
   updateSelectionLabel();
@@ -718,6 +722,7 @@ function startTimer(seconds) {
 
 function handleVerifyOTP() {
   const emailBtn = document.getElementById('user-email');
+  const emailLbl = document.getElementById('email-label');
   const email = emailBtn.value;
   const otp = document.getElementById('otp-input').value;
   const errorMsg = document.getElementById('error-msg');
@@ -785,6 +790,7 @@ function handleVerifyOTP() {
     document.getElementById('resend-container').style.display = 'flex';
     document.getElementById("timer-display").style.display = 'none';
     emailBtn.style.display = 'none';
+    emailLbl.style.display = 'none';
     errorMsg.style.color = "#474";
     updateSelectionLabel();
     
