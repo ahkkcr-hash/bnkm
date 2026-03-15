@@ -243,6 +243,7 @@ function nextPage()
   submitBtn.style.display = 'inline-block'; // This keeps the text centered!
   submitBtn.style.flex = '0.3';             // This gives it the 50% width/height ratio
   submitBtn.style.visibility = 'visible';
+  submitBtn.innerText = (mode === 0)?"Retrieve Booking":"Verify & Pay";
   timerDisplay.style.display = 'inline-block'; // This keeps the text centered!
   timerDisplay.style.flex = '0.5';             // This gives it the 50% width/height ratio
   timerDisplay.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
