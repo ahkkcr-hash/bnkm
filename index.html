@@ -138,7 +138,7 @@
       </div>
 
       <div style="display: flex; gap: 10px; margin-bottom: 10px; height: 50px">
-       <label style="flex:0.2">6-Digit OTP:</label>
+       <label id='otp-label' style="flex:0.2">6-Digit OTP:</label>
        <input type="text" id="otp-input" maxlength="6" placeholder="123456" style="flex: 0.5" class="bnkm-inputs">
        <button id="submit-btn" onclick="handleVerifyOTP()" class="bnkm-button" style="padding:0px; margin-bottom:0px; flex:0.3; height:50%">Verify & Pay</button>
       </div>
@@ -222,6 +222,7 @@ function nextPage()
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
   const sendBtn = document.getElementById("send-btn");
+  const sendLbl = document.getElementById("otp-label");
   //const parentDiv = sendBtn.parentElement; // The div with the 'flex' property
 
   // 1. Restore the Parent's layout
@@ -232,6 +233,9 @@ function nextPage()
   sendBtn.style.display = 'inline-block'; // This keeps the text centered!
   sendBtn.style.flex = '0.5';             // This gives it the 50% width/height ratio
   sendBtn.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
+  sendLbl.style.display = 'inline-block'; // This keeps the text centered!
+  sendLbl.style.flex = '0.5';             // This gives it the 50% width/height ratio
+  sendLbl.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
   renderSeats(allMapData);
   hideLoader();
   updateSelectionLabel();
@@ -748,7 +752,7 @@ function handleVerifyOTP() {
 
     // 3. Display the summaries (We'll update this helper function next)
     displayTicketSummary(userBookings); 
-
+    document.getElementById('otp-label').style.display = 'none';
     // 4. Handle the "Pay" Button Visibility
     if (userBookings.pending.length > 0) {
       submitBtn.innerText = "Pay";
@@ -782,7 +786,7 @@ function handleFinalRetrievedPayment() {
   const email = document.getElementById('user-email').value;
   const selectedSeats = getSelectedSeatArray();
   const errorMsg = document.getElementById('error-msg');
-
+  document.getElementById('loading-overlay').style.display = 'none';
   if (selectedSeats.length === 0) {
     errorMsg.innerText = "Please select at least one pending seat to pay.";
     return;
@@ -802,9 +806,9 @@ function handleFinalRetrievedPayment() {
 
 function triggerRazorpayCheckout(orderData) {
   // 1. Show the loading overlay immediately
-  if (document.getElementById('loading-overlay')) {
-    document.getElementById('loading-overlay').style.display = "block";
-  }
+  //if (document.getElementById('loading-overlay')) {
+  //  document.getElementById('loading-overlay').style.display = "block";
+  //}
 
   // 2. THE SAFETY CHECK: Is the Razorpay Receptionist at her desk?
   if (typeof Razorpay === 'undefined') {
