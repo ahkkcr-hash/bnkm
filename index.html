@@ -727,7 +727,8 @@ function handleVerifyOTP() {
   const otp = document.getElementById('otp-input').value;
   const errorMsg = document.getElementById('error-msg');
   const submitBtn = document.getElementById('submit-btn');
-
+  submitBtn.innerText = "Pay";
+      
   errorMsg.innerText = "Verifying Code...";
   
   google.script.run.withSuccessHandler(function(isValid) {
@@ -772,8 +773,7 @@ function handleVerifyOTP() {
     displayTicketSummary(userBookings); 
     // 4. Handle the "Pay" Button Visibility
     if (userBookings.pending.length > 0) {
-      submitBtn.innerText = "Pay";
-      submitBtn.style.display = 'block';
+      submitBtn.style.display = 'inline-block';
       submitBtn.disabled = true; 
       submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
       errorMsg.innerText = "Map Unlocked! Select your pending (amber) seats to pay.";
