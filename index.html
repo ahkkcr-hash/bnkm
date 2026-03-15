@@ -768,9 +768,9 @@ function handleVerifyOTP() {
     
     renderSeats(allMapData, allMySeatIds);
     document.getElementById('map-container').style.display = 'block';
-
     // 3. Display the summaries (We'll update this helper function next)
     displayTicketSummary(userBookings); 
+    submitBtn.innerText = "Pay";
     // 4. Handle the "Pay" Button Visibility
     if (userBookings.pending.length > 0) {
       submitBtn.style.display = 'inline-block';
