@@ -223,6 +223,7 @@ function nextPage()
   document.getElementById("otp-input").style.display = 'flex';
   const sendBtn = document.getElementById("send-btn");
   const sendLbl = document.getElementById("otp-label");
+  const submitBtn = document.getElementById("send-btn");
   //const parentDiv = sendBtn.parentElement; // The div with the 'flex' property
 
   // 1. Restore the Parent's layout
@@ -236,6 +237,9 @@ function nextPage()
   sendLbl.style.display = 'inline-block'; // This keeps the text centered!
   sendLbl.style.flex = '0.2';             // This gives it the 50% width/height ratio
   sendLbl.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
+  submitBtn.style.visibility = 'visible';console.log("TRIGGERING RENDER NOW!");
+  submitBtn.style.display = 'inline-block'; // This keeps the text centered!
+  submitBtn.style.flex = '0.3';             // This gives it the 50% width/height ratio
   renderSeats(allMapData);
   hideLoader();
   updateSelectionLabel();
