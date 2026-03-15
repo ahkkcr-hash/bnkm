@@ -285,7 +285,7 @@ function clearSelection() {
 
 function hideLoader() {
   document.getElementById('loading-overlay').style.display = 'none';
-  document.getElementById('submit-btn').innerText = (mode===0)?'Retrieve Booking':'Verify & Pay';
+  //document.getElementById('submit-btn').innerText = (mode===0)?'Retrieve Booking':'Verify & Pay';
   document.getElementById('namefield').style.display = (mode===0)?'none':'flex';
   document.getElementById('selection-summary').style.display = (mode===0)?'none':'block';
 }
@@ -727,7 +727,6 @@ function handleVerifyOTP() {
   const otp = document.getElementById('otp-input').value;
   const errorMsg = document.getElementById('error-msg');
   const submitBtn = document.getElementById('submit-btn');
-  submitBtn.innerText = "Pay";
       
   errorMsg.innerText = "Verifying Code...";
   
