@@ -221,7 +221,7 @@ function nextPage()
   document.getElementById("bookings").style.height = (mode===0)?'92vh':'85vh';
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
-  const email = document.getElementById('user-email').value;
+  const emailBtn = document.getElementById('user-email');
   const sendBtn = document.getElementById("send-btn");
   const sendLbl = document.getElementById("otp-label");
   const submitBtn = document.getElementById("submit-btn");
@@ -717,7 +717,8 @@ function startTimer(seconds) {
 }
 
 function handleVerifyOTP() {
-  const email = document.getElementById('user-email').value;
+  const emailBtn = document.getElementById('user-email');
+  const email = emailBtn.value;
   const otp = document.getElementById('otp-input').value;
   const errorMsg = document.getElementById('error-msg');
   const submitBtn = document.getElementById('submit-btn');
@@ -783,7 +784,7 @@ function handleVerifyOTP() {
     document.getElementById('send-btn').style.display = 'none';
     document.getElementById('resend-container').style.display = 'flex';
     document.getElementById("timer-display").style.display = 'none';
-    email.style.display='none';
+    emailBtn.style.display = 'none';
     errorMsg.style.color = "#474";
     updateSelectionLabel();
     
