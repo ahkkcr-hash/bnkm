@@ -892,9 +892,11 @@ function displayTicketSummary(bookings) {
   const detailsDiv = document.getElementById('retrieval-details');
   if (!detailsDiv) return;
 
-  let html = `<h3>${document.getElementById('user-email').value}</h4>
-              <div class="ticket-card">
-                <h4>Your Confirmed Seats</h3>
+  let html = `<h3>${document.getElementById('user-email').value}</h3>`;
+
+  if (bookings.sold.length > 0) {
+    html += `<div class="ticket-card">
+                <h4>Your Confirmed Seats</h4>
                 <hr style="border: 1px solid #444;">`;
   
   bookings.sold.forEach(b => {
@@ -902,16 +904,20 @@ function displayTicketSummary(bookings) {
   });
   
   html += `</div>`;
-  html += `<div class="ticket-card">
+  }
+  if(bookings.pending.length > 0) {
+  html += `<div class="pending-seats">
                 <h4>Your Pending Seats - click to book</h3>
                 <hr style="border: 1px solid #444;">`;
+  
   bookings.pending.forEach(b => {
     html += `<p><strong>Seat ${b.seat}:</strong> ${b.name}</p>`;
   });
   html += `</div>`;
- 
+  }
   detailsDiv.innerHTML = html;
   detailsDiv.style.display = 'block'; // Ensure it's visible
+  
 }
 
 function dismissWarning() {
@@ -1245,6 +1251,14 @@ td, th {
   border: 1px solid #474;
   text-align: left;
   padding: 8px;
+}
+
+.ticket-card {
+ color: #474
+}
+
+.pending-seats {
+ color: #e77
 }
  
 .bnkm-text { color: #c55; }
