@@ -426,13 +426,20 @@ async function renderSeats(seats, mySeatIds = []) {
     group.dataset.id = seatId;
 
     // --- MODE 0 vs MODE 1 CLASS LOGIC ---
-    if (isRetrievalMode) {
-      if (mySeatIds.includes(seatId)) {
-        group.setAttribute("class", "seat-group my-booked-seat");
-      } else {
-        group.setAttribute("class", "seat-group mode-0-neutral");
-      }
+// --- MODE 0 vs MODE 1 CLASS LOGIC ---
+if (isRetrievalMode) {
+  if (mySeatIds.includes(seatId)) {
+    // If it's YOUR seat, check if it's still Pending or already Sold
+    if (status === 'pending') {
+      group.setAttribute("class", "seat-group my-booked-seat-pending"); // Amber/Payable
     } else {
+      group.setAttribute("class", "seat-group my-booked-seat"); // Green/Confirmed
+    }
+  } else {
+    // Not your seat
+    group.setAttribute("class", "seat-group mode-0-neutral");
+  }
+} else {
       group.setAttribute("class", `seat-group ${status}`);
     }
 
