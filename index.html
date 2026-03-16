@@ -160,13 +160,19 @@
       <p>Your seats have been reserved and your ticket has been emailed to you! To book/retrieve more tickets kindly reload the page. If you are done you may close this page! Looking forward to seeing you there!</p>
      </div>
     </div>
-    <button onclick="document.getElementById('contact-us').style.display='flex';" class='bnkm-button'>Contact Us</button>
+    <span>
+     <button onclick="document.getElementById('contact-us').style.display='flex';" class='bnkm-button'>Contact Us</button>
+     <button onclick="document.getElementById('cancellation-policy').style.display='flex';" class='bnkm-button'>Cancellation Policy</button>
+     <button onclick="document.getElementById('tnc').style.display='flex';" class='bnkm-button'>Terms and Conditions</button>
+     <button id='revive' onclick="document.getElementById('revive-readme').style.display='flex';" class='bnkm-button-1'>Booking Interrupted?</button>
+    </span>
+    
     <div id='contact-us' class='full-screen bnkm-text' style='display:none'>
      <h3>Contact Us</h3>
      <p>For any queries regarding tickets, reach us at<br>Ph: +91 96321 74071.<br>Email: bhanu.nk.mandiram@gmail.com</p>
      <button onclick="document.getElementById('contact-us').style.display='none';" class='bnkm-button'>OK</button>
     </div> 
-    <button onclick="document.getElementById('cancellation-policy').style.display='flex';" class='bnkm-button'>Cancellation Policy</button>
+
     <div id='cancellation-policy' class='full-screen bnkm-text' style='display:none' class='bnkm-text'>
      <h3>Cancellation Charges</h3>
      <table>
@@ -185,17 +191,17 @@
      </table>
      <button onclick="document.getElementById('cancellation-policy').style.display='none';" class='bnkm-button'>OK</button>
     </div> 
-    <button onclick="document.getElementById('tnc').style.display='flex';" class='bnkm-button'>Terms and Conditions</button>
+    
     <div id='tnc' class='full-screen bnkm-text' style='display:none'>
      <h3>Terms and Conditions</h3>
      <p>1. You MUST show the e-ticket received in email to get entry.<br>
       2. Do NOT bring eatables in the auditorium.<br>
      3. We are not responsible for your belongings. Kindly keep them with care.</p>
      <button onclick="document.getElementById('tnc').style.display='none';" class='bnkm-button'>OK</button>
-    </div>    
-    <button id='revive' onclick="document.getElementById('revive-readme').style.display='flex';" class='bnkm-button-1'>Booking Interrupted?</button>
+    </div>
+    
     <div id='revive-readme' class='full-screen bnkm-text' style='display:none'>
-     <h3>Seats blocked but not confirmed?</h3>
+     <h3>Seats blocked but not booked?</h3>
      <h3>No Problem!</h3>
      <h4>Note: Seats are held for 10 minutes before they are released!</h4>
      <p style="color:#000">Step 1: REFRESH / RELOAD the page.<br>
