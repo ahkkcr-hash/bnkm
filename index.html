@@ -165,6 +165,7 @@
      <button onclick="document.getElementById('cancellation-policy').style.display='flex';" class='bnkm-button'>Cancellation Policy</button>
      <button onclick="document.getElementById('tnc').style.display='flex';" class='bnkm-button'>Terms and Conditions</button>
      <button id='revive' onclick="document.getElementById('revive-readme').style.display='flex';" class='bnkm-button-1'>Booking Interrupted?</button>
+     <button id='refresh' onclick="document.getElementById('refresh-me').style.display='flex';" class='bnkm-button-1'>Something Wrong?</button>
     </div>
     
     <div id='contact-us' class='full-screen bnkm-text' style='display:none'>
@@ -210,6 +211,13 @@
      <p style="color:#000">Click "Home" on the top right corner of the booking/retrieving page and proceed click "New Booking" instead.</p>
      <button onclick="document.getElementById('revive-readme').style.display='none';" class='bnkm-button'>OK</button>
     </div>
+      
+    <div id='refresh-me' class='full-screen bnkm-text' style='display:none'>
+     <h3>Is something feeling wrong?</h3>
+     <p style="color:#000">Don't worry, the ticketing site might need a quick refresh just so it's on the same page as you!</p>
+     <p>Click <a href='https://kalabhivyakti.b-nkm.org' target='_parent'>here</a> to refresh!</p>
+     <button onclick="document.getElementById('refresh-me').style.display='none';" class='bnkm-button'>OK</button>
+    </div>    
    </div>
    <div id="selection-summary" style="flex:0.1; font-weight: bold; color: #2c3e50; background: none; z-index: 29999;">
     Seats: <span id="current-selection-text">None</span>
@@ -237,6 +245,7 @@ function nextPage()
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
   document.getElementById('revive').style.display = (mode === 0)?'none':'block';
+  document.getElementById('refresh').style.display = (mode === 1)?'none':'block';
   document.getElementById('namefield').style.display = (mode === 0)?'none':'block';
   renderSeats(allMapData);
   const submitBtn = document.getElementById("submit-btn");
