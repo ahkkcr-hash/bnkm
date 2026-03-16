@@ -76,7 +76,7 @@
     </div>
     <div id="loading-overlay" class="full-screen">
       <div class="spinner"></div>
-      <span>Gathering Seat Information...</span>
+      <span id="spinner-text">Gathering Seat Information...</span>
     </div>
     <div id='welcome' class="flex-center-wrapper">
       <div class="welcome-child">
@@ -823,12 +823,14 @@ function triggerRazorpayCheckout(orderData) {
       const rowStrings = compressSeatRanges(rawSeatIds); 
       const emailSummary = rowStrings.join(" | "); 
       const customerName = document.getElementById('cust-name').value;
-
+      if (document.getElementById('loading-overlay')) 
+            document.getElementById('loading-overlay').style.display = "flex";
+            document.getElementById('spinner-text').innerText = "Dispatching Confirmation Email...";
+     
       google.script.run
         .withSuccessHandler(function() {
           if (document.getElementById('loading-overlay')) 
             document.getElementById('loading-overlay').style.display = "none";
-
           const modal = document.getElementById('success-modal');
           modal.innerHTML += `<br><br><strong>Transaction ID:</strong> ${response.razorpay_payment_id}`;
           modal.style.display = "flex";
