@@ -825,7 +825,7 @@ function triggerRazorpayCheckout(orderData) {
       const customerName = document.getElementById('cust-name').value;
       if (document.getElementById('loading-overlay')) 
             document.getElementById('loading-overlay').style.display = "flex";
-            document.getElementById('spinner-text').innerText = "Dispatching Confirmation Email...";
+            document.getElementById('spinner-text').innerText = "Dispatching Confirmation Email. Please wait...";
      
       google.script.run
         .withSuccessHandler(function() {
