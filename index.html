@@ -719,12 +719,12 @@ function handleVerifyOTP() {
 
     } else {
       // --- MODE 0: Retrieval ---
-      errorMsg.innerText = "Authenticated! Fetching your theater map...";
+      errorMsg.innerText = "Authenticated! Please wait...";
       
       google.script.run.withSuccessHandler(function(userBookings) {
   // 1. Check if there's ANY data at all
   if (userBookings.sold.length > 0 || userBookings.pending.length > 0) {
-    
+    errorMsg.innerText = "Fetching your theater map...";
     // 2. Combine all IDs so the map highlights BOTH sold and pending
     const allMySeatIds = [
       ...userBookings.sold.map(b => b.seat),
@@ -748,7 +748,7 @@ function handleVerifyOTP() {
       submitBtn.style.display = 'none'; // Nothing to pay for
       errorMsg.innerText = "All seats confirmed. No pending payments!";
     }
-
+            
     // 5. Cleanup the Auth UI
     document.getElementById('namefield').style.display = 'none';
     document.getElementById('otp-label').style.display = 'none';
@@ -760,10 +760,10 @@ function handleVerifyOTP() {
     emailLbl.style.display = 'none';
     errorMsg.style.color = "#474";
     updateSelectionLabel();
-    
+                        
   } else {
     errorMsg.innerText = "No bookings found for this email.";
-  }
+  } 
 }).getUserBookingDetails(email);
     }
   }).verifyOTP(email, otp);
