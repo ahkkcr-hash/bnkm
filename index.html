@@ -279,9 +279,24 @@ function clearSelection() {
 
 function hideLoader() {
   document.getElementById('loading-overlay').style.display = 'none';
-  //document.getElementById('submit-btn').innerText = (mode===0)?'Retrieve Booking':'Verify & Pay';
-  document.getElementById('namefield').style.display = (mode===0)?'none':'flex';
-  document.getElementById('selection-summary').style.display = (mode===0)?'none':'block';
+  
+  const submitBtn = document.getElementById('submit-btn');
+  const summary = document.getElementById('selection-summary');
+
+  // Logic: In Mode 0, only hide the summary if we haven't reached the "Pay Now" stage yet
+  if (mode === 0) {
+    if (submitBtn.innerText === "Pay Now") {
+      summary.style.display = 'inline-block';
+      summary.style.flex = '0.1';
+    } else {
+      summary.style.display = 'none';
+    }
+    document.getElementById('namefield').style.display = 'none';
+  } else {
+    // Mode 1: Standard display
+    summary.style.display = 'block';
+    document.getElementById('namefield').style.display = 'flex';
+  }
 }
 
 // Example usage:
