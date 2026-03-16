@@ -460,7 +460,7 @@ if (isRetrievalMode) {
       }
       if (status === "pending") setupTooltip(group, "Being booked...", "");
       if (status === "sold") setupTooltip(group, "Already taken", "");
-      if (status === "reserved") setupTooltip(group, "Not released for booking...", "");
+      if (status === "reserved") setupTooltip(group, "Not as yet released for booking...", "");
     } else {
    // MODE 0: Retrieval
    if (mySeatIds.includes(seatId)) {
