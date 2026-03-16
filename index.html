@@ -237,11 +237,8 @@ function nextPage()
   document.getElementById("auth-section").style.display = 'flex';
   document.getElementById("otp-input").style.display = 'flex';
   document.getElementById('revive').style.display = (mode === 0)?'none':'block';
-  /*const emailBtn = document.getElementById('user-email');
-  const emailLbl = document.getElementById('email-label');
-  const sendBtn = document.getElementById("send-btn");
-  const sendLbl = document.getElementById("otp-label");
-  const timerDisplay = document.getElementById("timer-display");*/
+  document.getElementById('namefield').style.display = (mode === 0)?'none':'block';
+  renderSeats(allMapData);
   const submitBtn = document.getElementById("submit-btn");
 
   submitBtn.innerText = (mode === 0)?"Retrieve Booking":"Verify & Pay";
@@ -253,28 +250,6 @@ function nextPage()
    butTon.style.flex = flexFrac[i];
    butTon.style.visibility = 'visible';
   }
-  /*sendBtn.style.display = 'inline-block'; // This keeps the text centered!
-  sendBtn.style.flex = '0.5';             // This gives it the 50% width/height ratio
-  sendBtn.style.visibility = 'visible';
-  sendLbl.style.display = 'inline-block'; // This keeps the text centered!
-  sendLbl.style.flex = '0.2';             // This gives it the 50% width/height ratio
-  sendLbl.style.visibility = 'visible';
-  submitBtn.style.display = 'inline-block'; // This keeps the text centered!
-  submitBtn.style.flex = '0.3';             // This gives it the 50% width/height ratio
-  submitBtn.style.visibility = 'visible';
-  timerDisplay.style.display = 'inline-block'; // This keeps the text centered!
-  timerDisplay.style.flex = '0.5';             // This gives it the 50% width/height ratio
-  timerDisplay.style.visibility = 'visible';
-  emailBtn.style.display = 'inline-block'; // This keeps the text centered!
-  emailBtn.style.flex = '0.5';             // This gives it the 50% width/height ratio
-  emailBtn.style.visibility = 'visible';
-  emailLbl.style.display = 'inline-block'; // This keeps the text centered!
-  emailLbl.style.flex = '0.2';             // This gives it the 50% width/height ratio
-  emailLbl.style.visibility = 'visible';
-  renderSeats(allMapData);
-  hideLoader();
-  updateSelectionLabel();
-  document.getElementById('submit-btn').disabled = true;*/
 }
 
 function previousPage()
@@ -286,6 +261,9 @@ function previousPage()
   document.getElementById("send-btn").innerText='Send OTP';
   document.getElementById("error-msg").classList.remove('blinking');
   document.getElementById("resend-container").style.display = 'none';
+  const seatLayer = document.getElementById('seat-layer');
+  if (!seatLayer) return;
+  while (seatLayer.firstChild) seatLayer.removeChild(seatLayer.firstChild);
 }
 
 function clearSelection() {
