@@ -98,7 +98,7 @@
           <button onclick="document.getElementById('refund-me').style.display = 'flex';" class="bnkm-button-1" style="flex:0.43; align-self: center; height:33%">Ask for Help</button>
        </div>
        <div id='refund-me' class='full-screen bnkm-text' style='display:none'>
-         <h3>No Problem</h3>
+         <h3>Didn't receive your ticket(s)?</h3>
          <p style="color:#000">Reach out to us mentioning your booking email ID (ONLY at the below contact points) and we will do the rest!</p>
          <div class="contact-row">
            <span class="icon">📞</span> 
@@ -1281,6 +1281,7 @@ td, th {
 .bnkm-text { color: #c55; }
 
  .wrap-text {
+  align-self: left;
   display: block;
   white-space: normal;      /* Standard wrapping behavior */
   overflow-wrap: break-word; /* Allows breaking within words if necessary */
@@ -1291,14 +1292,13 @@ td, th {
 
 .contact-row {
   display: flex;
-  align-items: left;
   color: #000;
   gap: 10px;
  }
 
 .icon {
   display: inline-flex;
-  align-items: center;
+  align-self: left;
   justify-content: center;
   width: 30px;          /* Sets a consistent "room" for the icon */
   font-size: 1.2rem;    /* Makes the emoji or SVG a bit bigger */
