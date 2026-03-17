@@ -102,11 +102,11 @@
          <p style="color:#000">Reach out to us mentioning your booking email ID (ONLY at the below contact points) and we will do the rest!</p>
          <div class="contact-row">
            <span class="icon">📞</span> 
-           <p class="wrap-text">Ph: +91 96321 74071</p>
+           <p class="wrap-text">+91 96321 74071</p>
          </div>
          <div class="contact-row">
            <span class="icon">✉️</span> 
-           <p class="wrap-text">Email: bhanu.nk.mandiram@gmail.com</p>
+           <p class="wrap-text">bhanu.nk.mandiram@gmail.com</p>
          </div>
          <button onclick="document.getElementById('refund-me').style.display='none';" class='bnkm-button'>OK</button>    
        </div>
@@ -186,11 +186,11 @@
      <p>For any queries regarding tickets mention your booking email ID to any of the following so we can better assist you:</p>
      <div class="contact-row">
        <span class="icon">📞</span> 
-       <p class="wrap-text">Ph: +91 96321 74071</p>
+       <p class="wrap-text">+91 96321 74071</p>
      </div>
      <div class="contact-row">
        <span class="icon">✉️</span> 
-       <p class="wrap-text">Email: bhanu.nk.mandiram@gmail.com</p>
+       <p class="wrap-text">bhanu.nk.mandiram@gmail.com</p>
      </div>
      <button onclick="document.getElementById('contact-us').style.display='none';" class='bnkm-button'>OK</button>
     </div> 
@@ -1280,9 +1280,9 @@ td, th {
  
 .bnkm-text { color: #c55; }
 
- .wrap-text {
+.wrap-text {
   align-self: left;
-  display: block;
+  flex:0.9;
   white-space: normal;      /* Standard wrapping behavior */
   overflow-wrap: break-word; /* Allows breaking within words if necessary */
   word-wrap: break-word;    /* Support for older browsers */
@@ -1297,7 +1297,7 @@ td, th {
  }
 
 .icon {
-  display: inline-flex;
+  flex:0.1;
   align-self: left;
   justify-content: center;
   width: 30px;          /* Sets a consistent "room" for the icon */
