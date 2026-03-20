@@ -334,8 +334,7 @@ function hideLoader() {
 window.onload = function() {
   console.log("1. Requesting data....");
   window.google.script.run.withSuccessHandler(function(base64) {
-    cachedLogo = base64;
-    document.documentElement.style.setProperty('--watermark-url', cachedLogo); })
+    cachedLogo = base64; })
    .withFailureHandler(function(err) {
       console.warn("Logo failed to load, but we can still book seats!", err);
   }).getLogoAsset();
@@ -583,7 +582,7 @@ function toggleSeat(element) {
 
 // This is the trigger
 window.addEventListener('load', function() {
-  document.documentElement.style.setProperty('--watermark-url', `url("${logoData}")`); 
+  document.documentElement.style.setProperty('--watermark-url', `url("${cachedLogo}")`); 
   console.log("Watermark Rendered.");
   console.log("DOM fully loaded. Requesting data from GAS...");
   google.script.run
