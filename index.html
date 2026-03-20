@@ -331,34 +331,51 @@ function hideLoader() {
 }
 
 // Example usage:
-window.onload = function() {
-  console.log("1. Requesting data....");
- 
-  window.google.script.run
+// --- THE SINGLE FINISH LINE ---
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM Ready. Dispatching parallel requests...");
+
+  // 1. The Logo Request (Ghost Watermark)
+  google.script.run
+    .withSuccessHandler(function(base64) {
+      if (base64) {
+        // The .trim() is our secret weapon against hidden newlines!
+        const cleanBase64 = base64.trim();
+        document.documentElement.style.setProperty('--watermark-url', `url("${cleanBase64}")`);
+        console.log("Logo arrived and rendered.");
+      }
+    })
+    .withFailureHandler(err => console.warn("Logo failed:", err))
+    .getLogoAsset();
+
+  // 2. The Map Data Request (The Seats)
+  google.script.run
     .withSuccessHandler(function(data) {
-       console.log("2. Data arrived! Count:", data.length);
-       
-       // FORCE the visibility BEFORE rendering
-       const mapContainer = document.getElementById('map-container');
-       mapContainer.style.display = (mode===0)?'none':'block'; 
-       
+      console.log("Map data arrived. Total seats:", data.length);
+      
       if (data && data.length > 0) {
-        allMapData = data;
+        allMapData = data; // Store it globally for later use
+        
+        // Safety: If the user clicked a mode button super fast, 
+        // we render now. Otherwise, hideLoader() handles the 'ready' state.
+        if (typeof mode !== 'undefined' && mode !== -1) {
+          renderSeats(allMapData);
+        }
+        
         hideLoader(); 
       } else {
-        console.error("Critical Error: Spreadsheet returned no seat data.");
-        alert("The auditorium map could not be loaded. Please refresh.");
+        console.error("Critical Error: No seat data found.");
+        alert("The auditorium map is empty. Please check the spreadsheet.");
       }
     })
     .withFailureHandler(function(err) {
-       console.error("The Bridge Failed:", err);
-       alert("Error: " + err);
-       console.log("3. Hiding Loader...");
-       hideLoader();
+      console.error("Map Data Bridge Failed:", err);
+      alert("Error fetching seats: " + err);
+      hideLoader();
     })
     .getMapData();
-};
-
+});
+ 
 function compressSeatRanges(seats) {
   if (seats.length === 0) return []; // Return empty array
   const rows = {};
@@ -574,26 +591,6 @@ function toggleSeat(element) {
   // 2. Trigger the Central Command to update the labels and the button
   updateSelectionLabel();
 }
-
-// This is the trigger
-window.addEventListener('load', function() {
-  window.google.script.run.withSuccessHandler(function(base64) {
-    cachedLogo = base64;
-    document.documentElement.style.setProperty('--watermark-url', `url("${cachedLogo.trim()}")`);
-    console.log("Watermark Rendered."); })
-   .withFailureHandler(function(err) {
-      console.warn("Logo failed to load, but we can still book seats!", err);
-  }).getLogoAsset();
-
-  console.log("DOM fully loaded. Requesting data from GAS...");
-  google.script.run
-    .withSuccessHandler(renderSeats)
-    .withFailureHandler(function(err) {
-       console.error("Backend Error: " + err);
-       alert("Could not load seats: " + err);
-    })
-    .getMapData(); 
-});
 
 /**
  * Scans the DOM for all seats currently marked as 'selected'
