@@ -252,7 +252,7 @@
 let isRendering = false;
 let allMapData = [];
 let mode=-1;
-
+let cachedLogo = "";
 function RetrieveMode() { mode=0; nextPage(); }
 
 function BookingMode() { mode=1; nextPage(); }
@@ -334,8 +334,7 @@ window.onload = function() {
   console.log("1. Requesting data....");
   window.google.script.run.withSuccessHandler(function(base64) {
     cachedLogo = base64;
-    document.getElementById('my-logo-img').src = "data:image/png;base64," + base64;
-  }).withFailureHandler(function(err) {
+    document.documentElement.style.setProperty('--watermark-url', cachedLogo);  }).withFailureHandler(function(err) {
       console.warn("Logo failed to load, but we can still book seats!", err);
   }).getLogoAsset();
  
