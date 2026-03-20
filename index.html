@@ -51,6 +51,7 @@
           withFailureHandler: function(cb) { _failureHandler = cb; return this; },
           
           // These must match the 'cases' in your doPost switch
+          getLogoAsset: function() { execute("getLogoAsset", []); },
           getMapData: function() { execute("getMapData", []); },
           handleVerifyOTP: function(e, o, i) { execute("handleVerifyOTP", [e, o, i]); },
           verifyOTP: function(e, o) { execute("verifyOTP", [e, o]); },
@@ -332,12 +333,12 @@ function hideLoader() {
 // Example usage:
 window.onload = function() {
   console.log("1. Requesting data....");
-  /*window.google.script.run.withSuccessHandler(function(base64) {
+  window.google.script.run.withSuccessHandler(function(base64) {
     cachedLogo = base64;
     document.documentElement.style.setProperty('--watermark-url', cachedLogo); })
    .withFailureHandler(function(err) {
       console.warn("Logo failed to load, but we can still book seats!", err);
-  }).getLogoAsset();*/
+  }).getLogoAsset();
  
   window.google.script.run
     .withSuccessHandler(function(data) {
