@@ -301,8 +301,9 @@ function clearSelection() {
   // 1. Find all elements that currently have the 'selected' class
   const selectedSeats = document.querySelectorAll('.selected');
   // 2. Loop through the found elements
+ targetClass = (mode === 1)?"available":"my-booked-seat-pending";
   selectedSeats.forEach(element => {
-    element.classList.replace('selected', 'available');
+    element.classList.replace('selected', targetClass);
   });
   // 3. Update the UI labels
   updateSelectionLabel();
