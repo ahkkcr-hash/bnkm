@@ -273,7 +273,7 @@ function nextPage()
   arr=[['none','none','flex','none','flex','flex','none','block','none','none'],
        ['inline-block','none','flex','block','flex','flex','block','none','block','none']];
   ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield','submit-btn'];
-  for(i = 0; i < arr.length; i++) {
+  for(i = 0; i < ele.length; i++) {
     document.getElementById(ele[i]).style.display = arr[mode][i];
     console.log(arr[mode][i],ele[i]);
   }
