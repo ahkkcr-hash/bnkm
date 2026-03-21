@@ -258,21 +258,12 @@ function RetrieveMode() { mode=0; nextPage(); }
 
 function BookingMode() { mode=1; nextPage(); }
 
-function nextPage()
-{ /*document.getElementById('map-container').style.display = (mode === 1) ? 'inline-block' : 'none';
-  document.getElementById("welcome").style.display='none';
-  document.getElementById("bookings").style.display='flex';
-  document.getElementById("clear").style.display = (mode===0)?'none':'block';
-  document.getElementById("auth-section").style.display = 'flex';
-  document.getElementById("otp-input").style.display = 'flex';
-  document.getElementById('revive').style.display = (mode === 0)?'none':'block';
-  document.getElementById('refresh').style.display = (mode === 1)?'none':'block';
-  document.getElementById('namefield').style.display = (mode === 0)?'none':'block';
-  document.getElementById('submit-btn').style.display = 'none';*/
+function nextPage() {
   document.getElementById("bookings").style.height = '80vh';
-  arr=[['none','none','flex','none','flex','flex','none','block','none','none'],
-       ['inline-block','none','flex','block','flex','flex','block','none','block','none']];
-  ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield','submit-btn'];
+  document.getElementById('submit-btn').disabled = true;
+  arr=[['none','none','flex','none','flex','flex','none','block','none'],
+       ['inline-block','none','flex','block','flex','flex','block','none','block']];
+  ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield'];
   for(i = 0; i < ele.length; i++) {
     document.getElementById(ele[i]).style.display = arr[mode][i];
     console.log(arr[mode][i],ele[i]);
