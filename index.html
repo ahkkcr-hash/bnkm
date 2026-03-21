@@ -697,8 +697,9 @@ function startTimer(seconds) {
   const timerDisplay = document.getElementById('timer-display');
   const sendBtn = document.getElementById('send-btn');
   if (seconds === 0) {
-   timerDisplay.style.display = 'none'; return;
+   timerDisplay.style.display = 'none';
   }
+  else {
   let remaining = seconds;
   clearInterval(timerInterval);
   timerInterval = setInterval(() => {
@@ -709,10 +710,10 @@ function startTimer(seconds) {
       clearInterval(timerInterval);
       timerDisplay.innerText = "";
       sendBtn.disabled = false; // Re-enable for resend
-    }
-  }, 1000);
+      }
+    }, 1000);
+  }
 }
-
 function handleVerifyOTP() {
   const emailBtn = document.getElementById('user-email');
   const emailLbl = document.getElementById('email-label');
