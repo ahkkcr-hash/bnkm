@@ -280,11 +280,11 @@ function nextPage() {
    butTon.style.flex = flexFrac[i];
    butTon.style.visibility = 'visible';
   }
+  startTimer(0);
 }
 
 function previousPage()
-{ startTimer(0);
-  mode=-1;
+{ mode=-1;
   document.getElementById("welcome").style.display='flex';
   document.getElementById("bookings").style.display='none';
   document.getElementById("error-msg").innerText='';
