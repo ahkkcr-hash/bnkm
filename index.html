@@ -262,9 +262,9 @@ function nextPage() {
   document.getElementById("bookings").style.height = '80vh';
   document.getElementById('submit-btn').disabled = true;
   startTimer(0);
-  arr=[['none','none','flex','none','flex','flex','none','block','none'],
-       ['inline-block','none','flex','block','flex','flex','block','none','block']];
-  ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield'];
+  arr=[['none','none','flex','none','flex','flex','none','block','none','none'],
+       ['inline-block','none','flex','block','flex','flex','block','none','block','none']];
+  ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield','timer-display'];
   for(i = 0; i < ele.length; i++) {
     document.getElementById(ele[i]).style.display = arr[mode][i];
     console.log(arr[mode][i],ele[i]);
