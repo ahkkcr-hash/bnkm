@@ -762,6 +762,7 @@ function handleVerifyOTP() {
     submitBtn.innerText = "Pay Now";
     // 4. Handle the "Pay" Button Visibility
     if (userBookings.pending.length > 0) {
+      document.getElementById("clear").style.display = 'block';
       submitBtn.style.display = 'inline-block';
       submitBtn.disabled = true; 
       submitBtn.onclick = function() { handleFinalRetrievedPayment(); };
