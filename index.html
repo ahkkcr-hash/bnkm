@@ -261,6 +261,7 @@ function BookingMode() { mode=1; nextPage(); }
 function nextPage() {
   document.getElementById("bookings").style.height = '80vh';
   document.getElementById('submit-btn').disabled = true;
+  startTimer(0);
   arr=[['none','none','flex','none','flex','flex','none','block','none'],
        ['inline-block','none','flex','block','flex','flex','block','none','block']];
   ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield'];
