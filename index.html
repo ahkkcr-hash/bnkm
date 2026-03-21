@@ -259,9 +259,9 @@ function RetrieveMode() { mode=0; nextPage(); }
 function BookingMode() { mode=1; nextPage(); }
 
 function nextPage() {
+  startTimer(0);
   document.getElementById("bookings").style.height = '80vh';
   document.getElementById('submit-btn').disabled = true;
-  startTimer(0);
   arr=[['none','none','flex','none','flex','flex','none','block','none'],
        ['inline-block','none','flex','block','flex','flex','block','none','block']];
   ele=['map-container','welcome','bookings','clear','auth-section','otp-input','revive','refresh','namefield'];
@@ -287,7 +287,6 @@ function previousPage()
 { mode=-1;
   document.getElementById("welcome").style.display='flex';
   document.getElementById("bookings").style.display='none';
-  document.getElementById("timer-display").style.display='none';
   document.getElementById("error-msg").innerText='';
   document.getElementById("retrieval-details").innerHTML=``;
   document.getElementById("send-btn").innerText='Send OTP';
