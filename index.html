@@ -52,6 +52,7 @@
           
           // These must match the 'cases' in your doPost switch
           getLogoAsset: function() { execute("getLogoAsset", []); },
+          getPosterAsset: function() { execute("getPosterAsset", []); }, // <--- ADD THIS LINE
           getMapData: function() { execute("getMapData", []); },
           handleVerifyOTP: function(e, o, i) { execute("handleVerifyOTP", [e, o, i]); },
           verifyOTP: function(e, o) { execute("verifyOTP", [e, o]); },
@@ -98,6 +99,11 @@
           <span style="flex:0.57;display:flex">Money debited but ticket not received?</span>
           <button onclick="document.getElementById('refund-me').style.display = 'flex';" class="bnkm-button-1" style="flex:0.43; align-self: center; height:33%">Ask for Help</button>
        </div>
+       <div style="display:flex; padding-top:1%; padding-bottom:1%">
+        <span style="flex:0.57;display:flex">Want another look at the poster?</span>
+        <button onclick="showPoster()" class="bnkm-button" style="flex:0.43; align-self: center; height:33%">Show Brochure</button>
+       </div>
+
        <div id='refund-me' class='full-screen bnkm-text' style='display:none'>
          <h3>Didn't receive your ticket(s)?</h3>
          <p style="color:#000">Reach out to us mentioning your booking email ID (ONLY at the below contact points) and we will do the rest!</p>
@@ -109,7 +115,7 @@
            <span class="icon">✉️</span> 
            <p class="wrap-text">bhanu.nk.mandiram@gmail.com</p>
          </div>
-         <button onclick="document.getElementById('refund-me').style.display='none';" class='bnkm-button'>OK</button>    
+          <button onclick="document.getElementById('refund-me').style.display='none';" class='bnkm-button'>OK</button>
        </div>
       </div>
      </div>
@@ -246,6 +252,16 @@
    </div>
    <div style="flex:0.03;">© Bhanumati Nrityakalamandiram. All rights reserved.</div>
   </div>
+  <div id="poster-overlay" class="full-screen" style="display: none; z-index: 30000;">
+   <div style="position: relative; max-width: 90%; max-height: 90%; display: flex; justify-content: center; align-items: center;">
+    
+    <div onclick="hidePoster()" style="position: absolute; top: -15px; right: -15px; width: 35px; height: 35px; background: black; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 2px solid white; z-index: 30001;">
+     <span style="color: white; font-weight: bold; font-family: Arial; font-size: 20px;">×</span>
+    </div>
+
+    <img id="poster-img" src="" style="max-width: 100%; max-height: 85vh; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5);">
+  </div>
+ </div>
  </body>
 </html>
 
@@ -254,6 +270,8 @@ let isRendering = false;
 let allMapData = [];
 let mode=-1;
 let cachedLogo = "";
+let cachedPoster = "";
+
 function RetrieveMode() { mode=0; nextPage(); }
 
 function BookingMode() { mode=1; nextPage(); }
@@ -349,7 +367,13 @@ document.addEventListener('DOMContentLoaded', function() {
     .withFailureHandler(err => console.warn("Logo failed:", err))
     .getLogoAsset();
 
-  // 2. The Map Data Request (The Seats)
+  // 2. NEW: Fetch Poster
+  google.script.run.withSuccessHandler(b64 => {
+    cachedPoster = b64.trim();
+    console.log("Poster arrived.");
+  }).getPosterAsset();
+
+  // 3. The Map Data Request (The Seats)
   google.script.run
     .withSuccessHandler(function(data) {
       console.log("Map data arrived. Total seats:", data.length);
@@ -949,6 +973,19 @@ window.addEventListener("orientationchange", function() {
     dismissWarning();
   }
 });
+
+function showPoster() {
+  if (cachedPoster) {
+    document.getElementById('poster-img').src = cachedPoster;
+    document.getElementById('poster-overlay').style.display = 'flex';
+  } else {
+    alert("The brochure is still being prepared. Please try in a second!");
+  }
+}
+
+function hidePoster() {
+  document.getElementById('poster-overlay').style.display = 'none';
+}
 </script>
 
 <style>
